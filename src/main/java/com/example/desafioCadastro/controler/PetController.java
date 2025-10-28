@@ -35,4 +35,10 @@ public class PetController {
         Pet updatePet = petService.updatePet(id, petDetails);
         return ResponseEntity.ok(updatePet);
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Pet>> buscarPet(@RequestParam String termo) {
+        List<Pet> petList = petService.buscar(termo);
+        return ResponseEntity.ok(petList);
+    }
 }

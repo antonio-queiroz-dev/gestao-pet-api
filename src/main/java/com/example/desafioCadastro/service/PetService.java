@@ -1,6 +1,7 @@
 package com.example.desafioCadastro.service;
 
 import com.example.desafioCadastro.model.Pet;
+import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.repository.PetRepository;
 import com.example.desafioCadastro.utils.PetValidator;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,18 @@ public class PetService {
         existingPet.setRaca(petDetails.getRaca());
 
         return petRepository.save(existingPet);
+    }
+
+    public List<Pet> buscar(String termo) {
+
+        if (termo.equalsIgnoreCase("macho") || termo.equalsIgnoreCase("femea")) {
+            return petRepository.findByPetSexo(PetSexo.valueOf(termo.toUpperCase()));
+        }
+
+        if (termo.matches("\\d+")) {
+            return petRepository.findByIdadeContainingIgnoreCase(termo);
+        }
+
+        return petRepository.findByNomePetContainingIgnoreCase(termo);
     }
 }
