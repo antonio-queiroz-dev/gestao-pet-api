@@ -1,6 +1,6 @@
 package com.example.desafioCadastro.utils;
 
-import com.example.desafioCadastro.model.Pet;
+import com.example.desafioCadastro.dto.PetCreateDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -8,14 +8,14 @@ public class PetValidator {
 
     public static final String NAO_INFORMADO = "NAO INFORMADO";
 
-    public void validar(Pet pet) {
+    public void validar(PetCreateDto pet) {
         validarNome(pet);
         validarIdade(pet);
         validarPeso(pet);
         validarRaca(pet);
     }
 
-    private void validarNome(Pet pet) {
+    private void validarNome(PetCreateDto pet) {
         String nome = pet.getNomePet();
 
         if (nome == null || nome.isBlank()) {
@@ -33,7 +33,7 @@ public class PetValidator {
         }
     }
 
-    private void validarIdade(Pet pet) {
+    private void validarIdade(PetCreateDto pet) {
         String idade = pet.getIdade();
 
         if (idade == null || idade.isBlank()) {
@@ -51,7 +51,7 @@ public class PetValidator {
         }
     }
 
-    private void validarPeso(Pet pet) {
+    private void validarPeso(PetCreateDto pet) {
         String peso = pet.getPeso();
 
         if (peso == null || peso.isBlank()) {
@@ -69,7 +69,7 @@ public class PetValidator {
         }
     }
 
-    private void validarRaca(Pet pet){
+    private void validarRaca(PetCreateDto pet){
         String raca = pet.getRaca();
 
         if (raca == null || raca.isBlank()) {

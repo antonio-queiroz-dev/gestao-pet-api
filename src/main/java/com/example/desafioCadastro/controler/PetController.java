@@ -1,5 +1,6 @@
 package com.example.desafioCadastro.controler;
 
+import com.example.desafioCadastro.dto.PetCreateDto;
 import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.service.PetService;
@@ -26,7 +27,7 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<Pet> cadastrarPet(@RequestBody Pet pet) {
+    public ResponseEntity<Pet> cadastrarPet(@RequestBody PetCreateDto pet) {
         Pet novoPet = petService.registrarPet(pet);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPet);
     }

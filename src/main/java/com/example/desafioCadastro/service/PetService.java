@@ -1,5 +1,6 @@
 package com.example.desafioCadastro.service;
 
+import com.example.desafioCadastro.dto.PetCreateDto;
 import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.model.PetSexo;
@@ -25,8 +26,18 @@ public class PetService {
         return petRepository.findAll();
     }
 
-    public Pet registrarPet(Pet pet) {
-        petValidator.validar(pet);
+    public Pet registrarPet(PetCreateDto petCreate) {
+        petValidator.validar(petCreate);
+
+        Pet pet = new Pet();
+        pet.setNomePet(petCreate.getNomePet());
+        pet.setPetTipo(petCreate.getPetTipo());
+        pet.setPetSexo(petCreate.getPetSexo());
+        pet.setPetEndereco(petCreate.getPetEndereco());
+        pet.setIdade(petCreate.getIdade());
+        pet.setPeso(petCreate.getPeso());
+        pet.setRaca(petCreate.getRaca());
+
 
         return petRepository.save(pet);
     }
