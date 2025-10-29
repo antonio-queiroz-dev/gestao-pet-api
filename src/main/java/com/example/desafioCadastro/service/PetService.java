@@ -1,5 +1,6 @@
 package com.example.desafioCadastro.service;
 
+import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.repository.PetRepository;
@@ -30,20 +31,30 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Long id, Pet petDetails) {
+    public Pet updatePet(Long id, PetUpdateDto petDetails) {
         Optional<Pet> optionalPet = petRepository.findById(id);
 
         if (optionalPet.isEmpty()) {
-            throw new RuntimeException("Pet com o ID: "+ id + " não encontrado");
+            throw new RuntimeException("Pet com o ID: " + id + " não encontrado");
         }
 
         Pet existingPet = optionalPet.get();
 
-        existingPet.setNomePet(petDetails.getNomePet());
-        existingPet.setPetEndereco(petDetails.getPetEndereco());
-        existingPet.setIdade(petDetails.getIdade());
-        existingPet.setPeso(petDetails.getPeso());
-        existingPet.setRaca(petDetails.getRaca());
+        if (petDetails.nomePet() != null) {
+            existingPet.setNomePet(petDetails.nomePet());
+        }
+        if (petDetails.petEndereco() != null) {
+            existingPet.setPetEndereco(petDetails.petEndereco());
+        }
+        if (petDetails.idade() != null) {
+            existingPet.setIdade(petDetails.idade());
+        }
+        if (petDetails.peso() != null) {
+            existingPet.setPeso(petDetails.peso());
+        }
+        if (petDetails.raca() != null) {
+            existingPet.setRaca(petDetails.raca());
+        }
 
         return petRepository.save(existingPet);
     }

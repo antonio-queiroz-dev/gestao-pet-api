@@ -1,5 +1,6 @@
 package com.example.desafioCadastro.controler;
 
+import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.service.PetService;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody Pet petDetails) {
+    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody PetUpdateDto petDetails) {
         Pet updatePet = petService.updatePet(id, petDetails);
         return ResponseEntity.ok(updatePet);
     }
