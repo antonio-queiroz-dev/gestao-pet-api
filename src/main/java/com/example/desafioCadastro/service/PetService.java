@@ -28,7 +28,7 @@ public class PetService {
     }
 
     public Pet registrarPet(PetCreateDto petCreate) {
-        petValidator.validar(petCreate);
+        petValidator.validarPetCreate(petCreate);
 
         Pet pet = new Pet();
         pet.setNomePet(petCreate.getNomePet());
@@ -53,18 +53,22 @@ public class PetService {
         Pet existingPet = optionalPet.get();
 
         if (petDetails.nomePet() != null) {
+            petValidator.validarNome(petDetails.nomePet());
             existingPet.setNomePet(petDetails.nomePet());
         }
         if (petDetails.petEndereco() != null) {
             existingPet.setPetEndereco(petDetails.petEndereco());
         }
         if (petDetails.idade() != null) {
+            petValidator.validarIdade(petDetails.idade());
             existingPet.setIdade(petDetails.idade());
         }
         if (petDetails.peso() != null) {
+            petValidator.validarPeso(petDetails.peso());
             existingPet.setPeso(petDetails.peso());
         }
         if (petDetails.raca() != null) {
+            petValidator.validarRaca(petDetails.raca());
             existingPet.setRaca(petDetails.raca());
         }
 
