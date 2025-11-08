@@ -73,7 +73,7 @@ public class PetValidator {
 
     public void validarPeso(String peso) {
 
-        if (!peso.matches("[0-9.,]+$")) {
+        if (!peso.matches("[0-9,]+$")) {
             throw new IllegalArgumentException("Sómente números são validos");
         }
 
