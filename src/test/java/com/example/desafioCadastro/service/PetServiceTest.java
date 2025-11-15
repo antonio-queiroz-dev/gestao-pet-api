@@ -1,6 +1,8 @@
 package com.example.desafioCadastro.service;
 
 import com.example.desafioCadastro.dto.PetCreateDto;
+import com.example.desafioCadastro.dto.PetUpdateDto;
+import com.example.desafioCadastro.exceptions.RecursoNaoEcontradoException;
 import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.model.PetEndereco;
 import com.example.desafioCadastro.model.PetSexo;
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -48,7 +51,7 @@ class PetServiceTest {
     }
 
     @Test
-    @DisplayName("Deve retornar um lista de pets vazia")
+    @DisplayName("Deve retornar uma lista de pets vazia")
     void deveRetornarListaVazia() {
         when(petRepository.findAll()).thenReturn(List.of());
 
@@ -95,5 +98,117 @@ class PetServiceTest {
         verify(petRepository).deleteById(1L);
     }
 
+    @Test
+    @DisplayName("Deve lançar exceção se o pet não for encontrado")
+    void deveLancarExcecaoPetNaoEcontrado() {
+        PetEndereco endereco = new PetEndereco();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.empty());
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "5", "4", "Siames");
+
+        Assertions.assertThrows(RecursoNaoEcontradoException.class, () -> petService.updatePet(1L,petUpdateDto ));
+    }
+
+    @Test
+    @DisplayName("Atualiza o nome corretamente")
+    void atualizaNome() {
+        PetEndereco endereco = new PetEndereco();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+        Pet existente = new Pet(1L,"Antigo Nome", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+
+        PetUpdateDto petUpdateDto = new PetUpdateDto("Novo nome", endereco, "5", "4", "Siames");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(petRepository.save(existente)).thenReturn(existente);
+
+        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+
+        Assertions.assertEquals(petUpdateDto.nomePet(), atualizado.getNomePet());
+    }
+
+    @Test
+    @DisplayName("Atualiza o endereco corretamente")
+    void atualizaEndereco() {
+        PetEndereco enderecoExistente = new PetEndereco();
+        enderecoExistente.setRua("Rua das Acácias");
+        enderecoExistente.setCidade("Belo Horizonte");
+        enderecoExistente.setNumeroCasa("55");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, enderecoExistente, "5", "4", "Siames");
+
+        PetEndereco enderecoNovo = new PetEndereco();
+        enderecoNovo.setRua("Rua das Acácias");
+        enderecoNovo.setCidade("Belo Horizonte");
+        enderecoNovo.setNumeroCasa("55");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", enderecoNovo, "5", "4", "Siames");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(petRepository.save(existente)).thenReturn(existente);
+
+        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+
+        Assertions.assertEquals(petUpdateDto.petEndereco(), atualizado.getPetEndereco());
+    }
+
+    @Test
+    @DisplayName("Atualiza a idade corretamente")
+    void atualizaIdade() {
+        PetEndereco endereco = new PetEndereco();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "10", "4", "Siames");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(petRepository.save(existente)).thenReturn(existente);
+
+        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+
+        Assertions.assertEquals(petUpdateDto.idade(), atualizado.getIdade());
+    }
+
+    @Test
+    @DisplayName("Atualiza peso corretamente")
+    void atualizaPeso() {
+        PetEndereco endereco = new PetEndereco();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "5", "10", "Siames");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(petRepository.save(existente)).thenReturn(existente);
+
+        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+
+        Assertions.assertEquals(petUpdateDto.peso(), atualizado.getPeso());
+    }
+
+    @Test
+    @DisplayName("Atualiza a raca corretamente")
+    void atualizaRaca() {
+        PetEndereco endereco = new PetEndereco();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "5", "4", "Persa");
+
+        when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(petRepository.save(existente)).thenReturn(existente);
+
+        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+
+        Assertions.assertEquals(petUpdateDto.raca(), atualizado.getRaca());
+    }
 
 }
