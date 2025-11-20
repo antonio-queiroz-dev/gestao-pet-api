@@ -10,24 +10,24 @@ public class Pergunta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String descicao;
+    private String descricao;
 
     public Pergunta() {
     }
 
-    public Pergunta( String descicao) {
-        this.descicao = descicao;
+    public Pergunta( String descricao) {
+        this.descricao = descricao;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getDescicao() {
-        return descicao;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setDescicao(String descicao) {
-        this.descicao = descicao;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

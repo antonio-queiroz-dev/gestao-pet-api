@@ -7,6 +7,9 @@ import com.example.desafioCadastro.model.Pet;
 import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.repository.PetRepository;
 import com.example.desafioCadastro.utils.PetValidator;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +26,12 @@ public class PetService {
         this.petValidator = petValidator;
     }
 
+    @Cacheable(value = "pets")
     public List<Pet> listarPets() {
         return petRepository.findAll();
     }
 
+    @CacheEvict(value = "pets", allEntries = true)
     public Pet registrarPet(PetCreateDto petCreate) {
         petValidator.validarPetCreate(petCreate);
 
@@ -43,6 +48,7 @@ public class PetService {
         return petRepository.save(pet);
     }
 
+    @CacheEvict(value = "pets", allEntries = true)
     public Pet updatePet(Long id, PetUpdateDto petDetails) {
         Optional<Pet> optionalPet = petRepository.findById(id);
 
@@ -88,6 +94,7 @@ public class PetService {
         return petRepository.findByNomePetContainingIgnoreCase(termo);
     }
 
+    @CacheEvict(value = "pets", allEntries = true)
     public void deletarPet(Long id) {
 
         if (!petRepository.existsById(id)) {
