@@ -3,6 +3,7 @@ package com.example.desafioCadastro.dto;
 import com.example.desafioCadastro.model.PetEndereco;
 import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.model.PetTipo;
+import com.example.desafioCadastro.model.Tutor;
 
 public class PetCreateDto {
     String nomePet;
@@ -13,10 +14,12 @@ public class PetCreateDto {
     String peso;
     String raca;
 
+    Long tutorId;
+
     public PetCreateDto() {
     }
 
-    public PetCreateDto(String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, String idade, String peso, String raca) {
+    public PetCreateDto(String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, String idade, String peso, String raca, Long tutorId) {
         this.nomePet = nomePet;
         this.petTipo = petTipo;
         this.petSexo = petSexo;
@@ -24,6 +27,7 @@ public class PetCreateDto {
         this.idade = idade;
         this.peso = peso;
         this.raca = raca;
+        this.tutorId = tutorId;
     }
 
     public String getNomePet() {
@@ -80,5 +84,13 @@ public class PetCreateDto {
 
     public void setRaca(String raca) {
         this.raca = raca;
+    }
+
+    public Long getTutorId() {
+        return tutorId;
+    }
+
+    public void setTutorId(Long tutorId) {
+        this.tutorId = tutorId;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.desafioCadastro.service;
 
 import com.example.desafioCadastro.dto.PetCreateDto;
+import com.example.desafioCadastro.dto.PetResponseDto;
 import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.exceptions.RecursoNaoEcontradoException;
 import com.example.desafioCadastro.model.Pet;
@@ -27,8 +28,22 @@ public class PetService {
     }
 
     @Cacheable(value = "pets")
-    public List<Pet> listarPets() {
-        return petRepository.findAll();
+    public List<PetResponseDto> listarPets() {
+        return petRepository.findAll().stream().map(this::toResponseDto).toList();
+    }
+
+    private PetResponseDto toResponseDto(Pet pet) {
+        return new PetResponseDto(
+                pet.getId(),
+                pet.getNomePet(),
+                pet.getPetTipo(),
+                pet.getPetSexo(),
+                pet.getPetEndereco(),
+                pet.getIdade(),
+                pet.getPeso(),
+                pet.getRaca(),
+                pet.getTutor() != null ? pet.getTutor().getId() : null
+        );
     }
 
     @CacheEvict(value = "pets", allEntries = true)
@@ -43,7 +58,6 @@ public class PetService {
         pet.setIdade(petCreate.getIdade());
         pet.setPeso(petCreate.getPeso());
         pet.setRaca(petCreate.getRaca());
-
 
         return petRepository.save(pet);
     }
@@ -81,24 +95,26 @@ public class PetService {
         return petRepository.save(existingPet);
     }
 
-    public List<Pet> buscar(String termo) {
+    public List<PetResponseDto> buscar(String termo) {
+        List<Pet> listaRetorno;
 
         if (termo.equalsIgnoreCase("macho") || termo.equalsIgnoreCase("femea")) {
-            return petRepository.findByPetSexo(PetSexo.valueOf(termo.toUpperCase()));
+            listaRetorno =  petRepository.findByPetSexo(PetSexo.valueOf(termo.toUpperCase()));
         }
 
         if (termo.matches("\\d+")) {
-            return petRepository.findByIdadeContainingIgnoreCase(termo);
+            listaRetorno =  petRepository.findByIdadeContainingIgnoreCase(termo);
         }
+        listaRetorno = petRepository.findByNomePetContainingIgnoreCase(termo);
 
-        return petRepository.findByNomePetContainingIgnoreCase(termo);
+        return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @CacheEvict(value = "pets", allEntries = true)
     public void deletarPet(Long id) {
 
         if (!petRepository.existsById(id)) {
-            throw new RecursoNaoEcontradoException("Produto com o id: " + id + " não encontrado!");
+            throw new RecursoNaoEcontradoException("Pet com o id: " + id + " não encontrado!");
         }
         petRepository.deleteById(id);
     }

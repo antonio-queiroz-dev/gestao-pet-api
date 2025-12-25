@@ -22,8 +22,8 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pet>> listarPets() {
-        List<Pet> pets = petService.listarPets();
+    public ResponseEntity<List<PetResponseDto>> listarPets() {
+        List<PetResponseDto> pets = petService.listarPets();
         return ResponseEntity.ok(pets);
     }
 
@@ -39,7 +39,8 @@ public class PetController {
                 novoPet.getPetEndereco(),
                 novoPet.getIdade(),
                 novoPet.getPeso(),
-                novoPet.getRaca()
+                novoPet.getRaca(),
+                novoPet.getTutor().getId()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -52,8 +53,8 @@ public class PetController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Pet>> buscarPet(@RequestParam String termo) {
-        List<Pet> petList = petService.buscar(termo);
+    public ResponseEntity<List<PetResponseDto>> buscarPet(@RequestParam String termo) {
+        List<PetResponseDto> petList = petService.buscar(termo);
         return ResponseEntity.ok(petList);
     }
 

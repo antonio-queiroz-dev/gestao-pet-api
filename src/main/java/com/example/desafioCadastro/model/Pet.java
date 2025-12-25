@@ -25,10 +25,14 @@ public class Pet {
     private String peso;
     private String raca;
 
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Tutor tutor;
+
     public Pet() {
     }
 
-    public Pet(long id, String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, String idade, String peso, String raca) {
+    public Pet(long id, String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, String idade, String peso, String raca, Tutor tutor) {
         this.id = id;
         this.nomePet = nomePet;
         this.petTipo = petTipo;
@@ -37,6 +41,7 @@ public class Pet {
         this.idade = idade;
         this.peso = peso;
         this.raca = raca;
+        this.tutor = tutor;
     }
 
     public long getId() {
@@ -97,5 +102,17 @@ public class Pet {
 
     public void setRaca(String raca) {
         this.raca = raca;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 }
