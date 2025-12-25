@@ -1,0 +1,61 @@
+package com.example.desafioCadastro.controller;
+
+import com.example.desafioCadastro.dto.TutorCreateDto;
+import com.example.desafioCadastro.dto.TutorResponseDto;
+import com.example.desafioCadastro.dto.TutorUpdateDto;
+import com.example.desafioCadastro.model.Tutor;
+import com.example.desafioCadastro.service.TutorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("api/tutores")
+public class TutorController {
+
+    private final TutorService tutorService;
+
+    public TutorController(TutorService tutorService) {
+        this.tutorService = tutorService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TutorResponseDto>> listarTutores() {
+        List<TutorResponseDto> tutores = tutorService.listarTutores();
+        return ResponseEntity.ok(tutores);
+    }
+
+    @PostMapping
+    public ResponseEntity<TutorResponseDto> cadastrarTutor(@RequestBody TutorCreateDto tutorCreateDto) {
+        Tutor novoTutor = tutorService.registrarTutor(tutorCreateDto);
+
+        TutorResponseDto responseDto = new TutorResponseDto(
+                novoTutor.getId(),
+                novoTutor.getNome(),
+                novoTutor.getEmail(),
+                novoTutor.getTelefone()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tutor> updateTutor(@PathVariable Long id, @RequestBody TutorUpdateDto tutorUpdateDto) {
+        Tutor updateTutor = tutorService.updateTutor(id, tutorUpdateDto);
+        return ResponseEntity.ok(updateTutor);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<TutorResponseDto>> buscarPet(@RequestParam String termo) {
+        List<TutorResponseDto> tutoresList = tutorService.buscarTutor(termo);
+        return ResponseEntity.ok(tutoresList);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarTutor(@PathVariable Long id) {
+        tutorService.deletarTutor(id);
+        return ResponseEntity.noContent().build();
+    }
+}
