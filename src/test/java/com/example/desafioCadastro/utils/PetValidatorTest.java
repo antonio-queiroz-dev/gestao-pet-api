@@ -4,6 +4,7 @@ import com.example.desafioCadastro.dto.PetCreateDto;
 import com.example.desafioCadastro.model.PetEndereco;
 import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.model.PetTipo;
+import com.example.desafioCadastro.model.Tutor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,14 @@ class PetValidatorTest {
     @Test
     @DisplayName("Deve preencher campos em branco com 'NAO INFORMADO'")
     void devePreencherCamposEmBranco() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        PetCreateDto pet = new PetCreateDto(null, PetTipo.GATO, PetSexo.MACHO, endereco,    "", "", "");
+        PetCreateDto pet = new PetCreateDto(null, PetTipo.GATO, PetSexo.MACHO, endereco,    "", "", "",tutor.getId());
 
         validator.validarPetCreate(pet);
 

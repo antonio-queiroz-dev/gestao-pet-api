@@ -3,10 +3,7 @@ package com.example.desafioCadastro.service;
 import com.example.desafioCadastro.dto.PetCreateDto;
 import com.example.desafioCadastro.dto.PetUpdateDto;
 import com.example.desafioCadastro.exceptions.RecursoNaoEcontradoException;
-import com.example.desafioCadastro.model.Pet;
-import com.example.desafioCadastro.model.PetEndereco;
-import com.example.desafioCadastro.model.PetSexo;
-import com.example.desafioCadastro.model.PetTipo;
+import com.example.desafioCadastro.model.*;
 import com.example.desafioCadastro.repository.PetRepository;
 import com.example.desafioCadastro.utils.PetValidator;
 import org.junit.jupiter.api.Assertions;
@@ -38,11 +35,13 @@ class PetServiceTest {
     @Test
     @DisplayName("Deve retornar uma lista com um pet")
     void deveRetornarUmalistaComUmPet() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet pet = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet pet = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames", tutor);
 
         when(petRepository.findAll()).thenReturn(Collections.singletonList(pet));
         List<Pet> pets = petService.listarPets();
@@ -64,14 +63,16 @@ class PetServiceTest {
     @Test
     @DisplayName("Deve cadastrar um pet com sucesso")
     void deveCadastrarUmPetComSucesso() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
 
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        PetCreateDto petCreateDto = new PetCreateDto("José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        PetCreateDto petCreateDto = new PetCreateDto("José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames",tutor.getId());
 
-        Pet petSalvo = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet petSalvo = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames",tutor);
 
         when(petRepository.save(any(Pet.class))).thenReturn(petSalvo);
 
@@ -115,11 +116,14 @@ class PetServiceTest {
     @Test
     @DisplayName("Atualiza o nome corretamente")
     void atualizaNome() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"Antigo Nome", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet existente = new Pet(1L,"Antigo Nome", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames",tutor);
 
         PetUpdateDto petUpdateDto = new PetUpdateDto("Novo nome", endereco, "5", "4", "Siames");
 
@@ -134,11 +138,14 @@ class PetServiceTest {
     @Test
     @DisplayName("Atualiza o endereco corretamente")
     void atualizaEndereco() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco enderecoExistente = new PetEndereco();
         enderecoExistente.setRua("Rua das Acácias");
         enderecoExistente.setCidade("Belo Horizonte");
         enderecoExistente.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, enderecoExistente, "5", "4", "Siames");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, enderecoExistente, "5", "4", "Siames",tutor);
 
         PetEndereco enderecoNovo = new PetEndereco();
         enderecoNovo.setRua("Rua das Acácias");
@@ -157,11 +164,14 @@ class PetServiceTest {
     @Test
     @DisplayName("Atualiza a idade corretamente")
     void atualizaIdade() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames", tutor);
 
         PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "10", "4", "Siames");
 
@@ -176,11 +186,14 @@ class PetServiceTest {
     @Test
     @DisplayName("Atualiza peso corretamente")
     void atualizaPeso() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames", tutor);
 
         PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "5", "10", "Siames");
 
@@ -195,11 +208,14 @@ class PetServiceTest {
     @Test
     @DisplayName("Atualiza a raca corretamente")
     void atualizaRaca() {
+        Tutor tutor = new Tutor();
+        tutor.setNome("João");
+
         PetEndereco endereco = new PetEndereco();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames");
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, "5", "4", "Siames", tutor);
 
         PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, "5", "4", "Persa");
 
