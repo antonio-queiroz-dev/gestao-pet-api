@@ -52,9 +52,21 @@ public class PetController {
         return ResponseEntity.ok(updatePet);
     }
 
-    @GetMapping("/buscar")
-    public ResponseEntity<List<PetResponseDto>> buscarPet(@RequestParam String termo) {
-        List<PetResponseDto> petList = petService.buscar(termo);
+    @GetMapping("/buscar/nome")
+    public ResponseEntity<List<PetResponseDto>> buscarPetPorNome(@RequestParam String nome) {
+        List<PetResponseDto> petList = petService.buscarPorNome(nome);
+        return ResponseEntity.ok(petList);
+    }
+
+    @GetMapping("/buscar/sexo")
+    public ResponseEntity<List<PetResponseDto>> buscarPorSexo(@RequestParam String sexo) {
+        List<PetResponseDto> petList = petService.buscarPorSexo(sexo);
+        return ResponseEntity.ok(petList);
+    }
+
+    @GetMapping("/buscar/idade")
+    public ResponseEntity<List<PetResponseDto>> buscarPorIdade(@RequestParam String idade) {
+        List<PetResponseDto> petList = petService.buscarPorIdade(idade);
         return ResponseEntity.ok(petList);
     }
 

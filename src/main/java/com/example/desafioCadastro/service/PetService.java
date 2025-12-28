@@ -94,19 +94,37 @@ public class PetService {
         return petRepository.save(existingPet);
     }
 
-    public List<PetResponseDto> buscar(String termo) {
+    public List<PetResponseDto> buscarPorNome(String nome) {
         List<Pet> listaRetorno;
 
-        if (termo.equalsIgnoreCase("macho") || termo.equalsIgnoreCase("femea")) {
-            listaRetorno = petRepository.findByPetSexo(PetSexo.valueOf(termo.toUpperCase()));
+        if (nome == null || nome.isBlank()) {
+            listaRetorno = petRepository.findAll();
         }
 
-        if (termo.matches("\\d+")) {
-            listaRetorno = petRepository.findByIdadeContainingIgnoreCase(termo);
-        }
-        listaRetorno = petRepository.findByNomePetContainingIgnoreCase(termo);
-
+        listaRetorno = petRepository.findByNomePetContainingIgnoreCase(nome);
         return listaRetorno.stream().map(this::toResponseDto).toList();
+    }
+
+    public List<PetResponseDto> buscarPorSexo(String sexo) {
+        List<Pet> listaRetorno;
+
+        if (sexo == null || sexo.isBlank()) {
+            listaRetorno = petRepository.findAll();
+        }
+
+        listaRetorno = petRepository.findByPetSexo(PetSexo.valueOf(sexo.toUpperCase()));
+        return listaRetorno.stream().map(this::toResponseDto).toList();
+    }
+
+    public List<PetResponseDto> buscarPorIdade(String idade) {
+        List<Pet> listarRetorno;
+
+        if (idade == null || idade.isBlank()) {
+            listarRetorno = petRepository.findAll();
+        }
+
+        listarRetorno = petRepository.findByIdadeContainingIgnoreCase(idade);
+        return listarRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @CacheEvict(value = "pets", allEntries = true)
