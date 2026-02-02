@@ -47,9 +47,22 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody PetUpdateDto petDetails) {
-        Pet updatePet = petService.updatePet(id, petDetails);
-        return ResponseEntity.ok(updatePet);
+    public ResponseEntity<PetResponseDto> updatePet(@PathVariable Long id, @RequestBody PetUpdateDto petDetails) {
+        Pet petAtualizado = petService.updatePet(id, petDetails);
+
+        PetResponseDto responseDto = new PetResponseDto(
+                petAtualizado.getId(),
+                petAtualizado.getNomePet(),
+                petAtualizado.getPetTipo(),
+                petAtualizado.getPetSexo(),
+                petAtualizado.getPetEndereco(),
+                petAtualizado.getIdade(),
+                petAtualizado.getPeso(),
+                petAtualizado.getRaca(),
+                petAtualizado.getTutor() != null ? petAtualizado.getTutor().getId() : null
+        );
+
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/buscar/nome")

@@ -3,7 +3,6 @@ package com.example.desafioCadastro.dto;
 import com.example.desafioCadastro.model.PetEndereco;
 import com.example.desafioCadastro.model.PetSexo;
 import com.example.desafioCadastro.model.PetTipo;
-import com.example.desafioCadastro.model.Tutor;
 
 public class PetCreateDto {
     String nomePet;
@@ -15,9 +14,6 @@ public class PetCreateDto {
     String raca;
 
     Long tutorId;
-
-    public PetCreateDto() {
-    }
 
     public PetCreateDto(String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, String idade, String peso, String raca, Long tutorId) {
         this.nomePet = nomePet;

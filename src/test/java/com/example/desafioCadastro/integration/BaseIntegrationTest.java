@@ -10,18 +10,20 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
 @ActiveProfiles("test")  //desativa o cache Redis para os testes
 public abstract class BaseIntegrationTest {
 
     @LocalServerPort
     protected int port;
 
-    @Container
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("testedb")
             .withUsername("test")
             .withPassword("test");
+
+    static {
+        mySQLContainer.start();
+    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
