@@ -1,166 +1,136 @@
-# 🐾 Desafio cadastro
+# 🐾 Gestão Pet API
 
-API REST desenvolvida com **Spring Boot 3**, **Java 21** e **MySQL** que realiza o cadastro e gerenciamento de pets e tutores.
-O projeto inclui integração com o **Swagger UI** para documentação automática e **Docker Compose** para subir o banco de dados e o Redis(cache).
+API REST desenvolvida com **Spring Boot 3**, **Java 21** e **MySQL** para o gerenciamento eficiente de pets e tutores.
+O projeto adota práticas modernas de desenvolvimento, incluindo **Dockerização completa**, **Testes de Integração com Testcontainers**, **Cache com Redis** e documentação via **Swagger UI**.
+
 ---------------------------------------
 
-## 🚀 Tecnologias utilizadas
+## 🚀 Tecnologias Utilizadas
 
-* **Java 21**
+* **Java 21** (LTS)
 * **Spring Boot 3.5.6**
-    * **Spring Web**
-    * **Spring Data JPA**
-* **MySQL 8**
-* **Docker Compose**
-* **SpringDoc OpenAPI (Swagger UI)**
-* **JUnit 5** + **Mockito**
-* **Maven**
-* **Redis** (cache)
+    * Spring Web
+    * Spring Data JPA
+    * Spring Data Redis
+* **Banco de Dados**: MySQL 8
+* **Cache**: Redis
+* **Containerização**: Docker & Docker Compose
+* **Testes**:
+    * JUnit 5 + Mockito (Unitários)
+    * **Testcontainers** (Integração) 
+    * **Documentação**: SpringDoc OpenAPI (Swagger UI)
+* **Build**: Maven
 
 ---
 
-## ⚙️ Configuração do ambiente
+## ⚙️ Pré-requisitos
 
-### 🔧 Requisitos
+* **Docker Desktop** (Obrigatório)
+* **Git**
 
-* **JDK 21+**
-* **Maven 3+**
-* **Docker Desktop**
+---
 
-## ▶️ Executando o Projeto
+## ▶️ Como Executar (Via Docker)
 
-1. Clone o repositório:
+A maneira mais simples de rodar a aplicação é utilizando o Docker Compose. Isso subirá o banco de dados, o cache Redis e a API automaticamente.
 
-```
-git clone https://github.com/Antonio-scripts/desafioCadastro.git
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/Antonio-scripts/gestao-pet-api.git
+   cd gestao-pet-api
+   ```
 
-```
+2. **Suba a aplicação:**
+   ```bash
+   docker compose up --build
+   ```
+   *Aguarde alguns instantes até que todos os containers estejam saudáveis (healthy).*
 
-2. Suba o banco de dados e o cache Redis com Docker:
+3. **Acesse a API:**
+   A aplicação estará rodando em: `http://localhost:8080`
 
-```
-docker-compose up
-```
+---
 
-3. Execute a aplicação:
+## 💻 Desenvolvimento Local (Opcional)
 
-```
-mvn spring-boot:run
-```
+Caso queira rodar a aplicação via IDE (IntelliJ/Eclipse) para desenvolvimento:
 
-4. Acesse a documentação Swagger:
+1. Suba apenas a infraestrutura (MySQL + Redis):
+   ```bash
+   docker compose up -d mysql redis
+   ```
+2. Configure sua IDE para usar o perfil `dev` (`-Dspring.profiles.active=dev`).
+3. Execute a classe `GestaoPetApiApplication`.
 
-```
-http://localhost:8080/swagger-ui/index.html
-```
+---
 
-## 🧠 Funcionalidades
+## 📚 Documentação da API (Swagger)
 
-### 🐶 Pets
-* Cadastrar pets
-* Listar todos os pets
-* Buscar pet por nome
-* Buscar pet por sexo
-* Buscar pet por idade
-* Deletar pet pelo ID
+Com a aplicação rodando, acesse a documentação interativa para testar os endpoints:
 
-### 👤 Tutores
+👉 **[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)**
 
-* Listar todos os tutores
-* Buscar tutor por nome
-* Buscar tutor por email
-* Deletar tutor pelo ID
+---
 
-##
-
-
-* Documentação com Swagger
-* Testes unitários
-
-## 🧪 Testes
-
-Os testes utilizam o **JUnit 5** e **Mockito**, garantindo validação das regras de negócio.
-
-Exemplos:
-
-* Cadastro de pet com sucesso
-* Listagem de pets
-* Validação de campos vazios
-* Exceções para entradas inválidas
-
-## 🐬 Subindo banco de dados com Docker
-
-O projeto possui um banco de dados **Docker**, localizado em `docker-compose.yml`.
-Para subir o banco de dados:
-
-```
-docker-compose up
-```
-
-## 📚 Documentação Swagger
-
-Acesse:
-[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-
-🧠 Regras de negócio e validações
+## 🧠 Funcionalidades Principais
 
 ### 🐶 Pets
-* A validação de pets é feita de forma manual através da classe `PetValidator`,
-  isso devido a regras de negócio específicas da entidade.
-
-Regras da entidade
-- Substituição de campos vazios por `"NÃO_INFORMADO"`
-- Validação de nome (nome e sobrenome)
-- Bloqueio de caracteres especiais
-- Idade máxima de 20 anos
-- Peso mínimo de 0.5kg e máximo de 60kg
-
+* **CRUD Completo**: Cadastro, listagem, atualização e remoção.
+* **Buscas Avançadas**: Por nome, sexo, idade e tutor.
+* **Validações de Negócio**:
+    * Idade máxima de 20 anos.
+    * Peso entre 0.5kg e 60kg.
+    * Validação de nome (nome e sobrenome)
 
 ### 👤 Tutores
-A validação de tutores utiliza **Bean Validation** diretamente na entidade,
-por se tratar de regras simples e estruturais.
-Anotações utilizadas:
-- `@NotBlank` para validação do nome
-- `@Email` para validação do e-mail
+* **CRUD Completo**.
+* **Validação Estrutural**: Uso de Bean Validation (`@NotBlank`, `@Email`).
 
+---
 
-## ⚡ Cache com Redis
+## ⚡ Performance e Cache
 
-O projeto utiliza **Spring Cache** com **Redis** para otimizar consultas frequentes,
-como a listagem de pets e tutores.
+O projeto utiliza **Redis** para cachear consultas frequentes (`@Cacheable`), reduzindo a carga no banco de dados. O cache é invalidado automaticamente (`@CacheEvict`) quando dados são alterados, garantindo consistência.
 
-Anotações utilizadas:
-- `@Cacheable`
-- `@CacheEvict`
+---
 
-Isso reduz acessos repetidos ao banco de dados e melhora a performance da API.
+## 🧪 Testes Automatizados
+
+O projeto possui testes automatizados:
+
+1.  **Testes Unitários**: Validam a lógica de negócio isolada (Services) usando Mockito.
+2.  **Testes de Integração**: Usam **Testcontainers** para subir um banco MySQL real e descartável durante os testes, garantindo que a aplicação funcione de ponta a ponta.
+
+Para rodar os testes (requer Java/Maven instalados):
+```bash
+mvn test
+```
+
+---
 
 ## 🏗️ Arquitetura
 
-O projeto segue o padrão de arquitetura em camadas:
-
-- Controller
-- Service
-- Repository
-- DTOs
-
-## 🚧 Próximos passos (roadmap)
-
-> Este roadmap representa ideias de evolução do projeto e pode ser ajustado conforme o desenvolvimento.
-
-- Criar testes de integração
-- Automatizações com GitHub Actions (CI)
-- Dockerizar completamente a aplicação
-- Publicar a aplicação em ambiente cloud (AWS)
-
-
-
-🧑‍💻 Autor
-
-Projeto desenvolvido por **Antonio Queiroz**
-
-💼 GitHub - [Antonio-scripts](https://github.com/Antonio-scripts)
-
-💼 Linkdin - [Antonio Queiroz](https://www.linkedin.com/in/antonio-queiroz-2983491a2/)
+O projeto segue uma arquitetura limpa em camadas:
+* **Controller**:
+* **Service**:
+* **Repository**:
+* **DTOs (Records)**:
+* **Model**
 
 ---
+
+## 🚧 Roadmap (Evolução)
+
+- [x] Criar testes de integração
+- [x] Dockerizar completamente a aplicação
+- [x] Implementar Cache com Redis
+- [ ] Implementar CI/CD com GitHub Actions
+- [ ] Publicar na AWS (EC2 ou ECS)
+
+---
+
+## 🧑‍💻 Autor
+
+Desenvolvido por **Antonio Queiroz**
+
+💼 [LinkedIn](https://www.linkedin.com/in/antonio-queiroz-2983491a2/) | 🐙 [GitHub](https://github.com/Antonio-scripts)
