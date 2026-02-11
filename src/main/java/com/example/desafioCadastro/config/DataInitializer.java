@@ -3,14 +3,16 @@ package com.example.desafioCadastro.config;
 import com.example.desafioCadastro.model.Pergunta;
 import com.example.desafioCadastro.repository.PerguntaRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Profile("!test")
 public class DataInitializer implements CommandLineRunner {
 
-    private PerguntaRepository perguntaRepository;
+    private final PerguntaRepository perguntaRepository;
 
     public DataInitializer(PerguntaRepository perguntaRepository) {
         this.perguntaRepository = perguntaRepository;
@@ -30,9 +32,9 @@ public class DataInitializer implements CommandLineRunner {
             );
 
             perguntaRepository.saveAll(perguntasIniciais);
-            System.out.printf("Perguntas iniciais criadas com sucesso!");
+            System.out.println("Perguntas iniciais criadas com sucesso!");
         } else {
-            System.out.printf("Perguntas já existentes, nenhuma inserção feita");
+            System.out.println("Perguntas já existentes, nenhuma inserção feita");
         }
     }
 }
