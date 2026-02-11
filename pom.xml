@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>desafioCadastro</artifactId>
+	<artifactId>gestao-pet-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>desafioCadastro</name>
-	<description>Desafio sistema de cadastro</description>
+	<name>gestao-pet-api</name>
+	<description>Sistema de Gestão de Pets</description>
 	<url/>
 	<licenses>
 		<license/>
