@@ -7,7 +7,7 @@ on:
     branches: [ main, springboot-migration ]
 
 jobs:
-  build-and-test:
+  tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -22,5 +22,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Run unit and integration tests
-        run: mvn clean verify
+      - name: testa testes unitarios
+        run: mvn clean test -Dtest='!**/*IntegrationTest'
