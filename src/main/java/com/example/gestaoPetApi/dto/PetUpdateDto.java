@@ -1,6 +1,6 @@
 package com.example.gestaoPetApi.dto;
 
-import com.example.gestaoPetApi.model.PetEndereco;
+import com.example.gestaoPetApi.model.EnderecoTutor;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -14,8 +14,6 @@ public record PetUpdateDto(
                 message = "O nome deve conter nome e sobrenome, e não pode ter caracteres especiais"
         )
         String nomePet,
-
-        PetEndereco petEndereco,
 
         @Max(value = 20, message = "A idade não pode ser maior que 20")
         Integer idade,

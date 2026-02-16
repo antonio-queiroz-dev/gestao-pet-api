@@ -36,7 +36,8 @@ public class TutorController {
                 novoTutor.getId(),
                 novoTutor.getNome(),
                 novoTutor.getEmail(),
-                novoTutor.getTelefone()
+                novoTutor.getTelefone(),
+                novoTutor.getEnderecoTutor()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -50,7 +51,8 @@ public class TutorController {
                 updateTutor.getId(),
                 updateTutor.getNome(),
                 updateTutor.getEmail(),
-                updateTutor.getTelefone()
+                updateTutor.getTelefone(),
+                updateTutor.getEnderecoTutor()
         );
         return ResponseEntity.ok(responseDto);
     }
@@ -75,7 +77,8 @@ public class TutorController {
                 tutor.getId(),
                 tutor.getNome(),
                 tutor.getEmail(),
-                tutor.getTelefone()
+                tutor.getTelefone(),
+                tutor.getEnderecoTutor()
         );
         return ResponseEntity.ok(tutorResponseDto);
 

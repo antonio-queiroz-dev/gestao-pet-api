@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PetService {
@@ -39,7 +38,6 @@ public class PetService {
                 pet.getNomePet(),
                 pet.getPetTipo(),
                 pet.getPetSexo(),
-                pet.getPetEndereco(),
                 pet.getIdade(),
                 pet.getPeso(),
                 pet.getRaca(),
@@ -60,7 +58,6 @@ public class PetService {
         pet.setNomePet(petCreate.nomePet());
         pet.setPetTipo(petCreate.petTipo());
         pet.setPetSexo(petCreate.petSexo());
-        pet.setPetEndereco(petCreate.petEndereco());
         pet.setIdade(petCreate.idade());
         pet.setPeso(petCreate.peso());
         pet.setRaca(petCreate.raca());
@@ -77,9 +74,6 @@ public class PetService {
 
         if (petDetails.nomePet() != null) {
             existingPet.setNomePet(petDetails.nomePet());
-        }
-        if (petDetails.petEndereco() != null) {
-            existingPet.setPetEndereco(petDetails.petEndereco());
         }
         if (petDetails.idade() != null) {
             existingPet.setIdade(petDetails.idade());

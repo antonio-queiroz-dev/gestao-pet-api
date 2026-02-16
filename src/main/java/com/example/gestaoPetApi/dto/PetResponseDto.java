@@ -1,6 +1,6 @@
 package com.example.gestaoPetApi.dto;
 
-import com.example.gestaoPetApi.model.PetEndereco;
+import com.example.gestaoPetApi.model.EnderecoTutor;
 import com.example.gestaoPetApi.model.PetSexo;
 import com.example.gestaoPetApi.model.PetTipo;
 
@@ -11,7 +11,6 @@ public record PetResponseDto(Long id,
                              String nomePet,
                              PetTipo petTipo,
                              PetSexo petSexo,
-                             PetEndereco petEndereco,
                              Integer idade,
                              BigDecimal peso,
                              String raca,

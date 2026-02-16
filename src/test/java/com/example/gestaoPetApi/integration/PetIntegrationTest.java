@@ -47,17 +47,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor.setTelefone("11999999999");
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-
 
         PetCreateDto request = new PetCreateDto(
                 "José caça rato",
                 PetTipo.GATO,
                 PetSexo.MACHO,
-                endereco,
                 5,
                 new BigDecimal("4.0"),
                 "Siames",
@@ -79,16 +73,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
     @DisplayName("Deve retornar 404 criar pet com tutor inexistente")
     void deveRetornar404CriarPetComTutorInexistente() {
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
 
         PetCreateDto request = new PetCreateDto(
                 "José caça rato",
                 PetTipo.GATO,
                 PetSexo.MACHO,
-                endereco,
                 5,
                 new BigDecimal("4.0"),
                 "Siames",
@@ -108,15 +97,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Pet com dados invalidos")
     void deveCriarPetComDadosInvalidos() {
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
+
         PetCreateDto request = new PetCreateDto(
                 "",
                 PetTipo.GATO,
                 PetSexo.MACHO,
-                endereco,
                 25,
                 new BigDecimal("70.0"),
                 "Siames",
@@ -140,16 +125,10 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor.setTelefone("11999999999");
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-
         Pet petSalvo = new Pet();
         petSalvo.setNomePet("José caça rato");
         petSalvo.setPetTipo(PetTipo.GATO);
         petSalvo.setPetSexo(PetSexo.MACHO);
-        petSalvo.setPetEndereco(endereco);
         petSalvo.setIdade(5);
         petSalvo.setPeso(new BigDecimal("4.0"));
         petSalvo.setRaca("Siames");
@@ -175,16 +154,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor1.setTelefone("11999999999");
         Tutor tutorSalvo = tutorRepository.save(tutor1);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
 
         Pet pet1Tutor1 = new Pet();
         pet1Tutor1.setNomePet("José caça rato");
         pet1Tutor1.setPetTipo(PetTipo.GATO);
         pet1Tutor1.setPetSexo(PetSexo.MACHO);
-        pet1Tutor1.setPetEndereco(endereco);
         pet1Tutor1.setIdade(5);
         pet1Tutor1.setPeso(new BigDecimal("4.0"));
         pet1Tutor1.setRaca("Siames");
@@ -198,16 +172,10 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor2.setTelefone("11235467895");
         Tutor tutorSalvo2 = tutorRepository.save(tutor2);
 
-        PetEndereco endereco2 = new PetEndereco();
-        endereco2.setRua("Rua Osni Lopes");
-        endereco2.setCidade("Jaraguá do Sul");
-        endereco2.setNumeroCasa("87");
-
         Pet pet1tutor2 = new Pet();
         pet1tutor2.setNomePet("Marilina Santos");
         pet1tutor2.setPetTipo(PetTipo.GATO);
         pet1tutor2.setPetSexo(PetSexo.FEMEA);
-        pet1tutor2.setPetEndereco(endereco2);
         pet1tutor2.setIdade(8);
         pet1tutor2.setPeso(new BigDecimal("5.0"));
         pet1tutor2.setRaca("Siames");
@@ -234,16 +202,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor1.setTelefone("11999999999");
         Tutor tutorSalvo = tutorRepository.save(tutor1);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
 
         Pet pet1Tutor1 = new Pet();
         pet1Tutor1.setNomePet("José caça rato");
         pet1Tutor1.setPetTipo(PetTipo.GATO);
         pet1Tutor1.setPetSexo(PetSexo.MACHO);
-        pet1Tutor1.setPetEndereco(endereco);
         pet1Tutor1.setIdade(5);
         pet1Tutor1.setPeso(new BigDecimal("4.0"));
         pet1Tutor1.setRaca("Siames");
@@ -255,7 +218,6 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         pet2tutor1.setNomePet("Thor Silva");
         pet2tutor1.setPetTipo(PetTipo.CACHORRO);
         pet2tutor1.setPetSexo(PetSexo.MACHO);
-        pet2tutor1.setPetEndereco(endereco);
         pet2tutor1.setIdade(10);
         pet2tutor1.setPeso(new BigDecimal("9.0"));
         pet2tutor1.setRaca("Caramelo");
@@ -269,16 +231,11 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor2.setTelefone("11235467895");
         Tutor tutorSalvo2 = tutorRepository.save(tutor2);
 
-        PetEndereco endereco2 = new PetEndereco();
-        endereco2.setRua("Rua Osni Lopes");
-        endereco2.setCidade("Jaraguá do Sul");
-        endereco2.setNumeroCasa("87");
 
         Pet pet1tutor2 = new Pet();
         pet1tutor2.setNomePet("Marilina");
         pet1tutor2.setPetTipo(PetTipo.GATO);
         pet1tutor2.setPetSexo(PetSexo.FEMEA);
-        pet1tutor2.setPetEndereco(endereco2);
         pet1tutor2.setIdade(8);
         pet1tutor2.setPeso(new BigDecimal("5.0"));
         pet1tutor2.setRaca("Siames");
@@ -305,30 +262,19 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor.setNome("João Silva");
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-
         Pet petSalvo = new Pet();
         petSalvo.setNomePet("José caça rato");
         petSalvo.setPetTipo(PetTipo.GATO);
         petSalvo.setPetSexo(PetSexo.MACHO);
-        petSalvo.setPetEndereco(endereco);
         petSalvo.setIdade(5);
         petSalvo.setPeso(new BigDecimal("4"));
         petSalvo.setRaca("Siames");
         petSalvo.setTutor(tutorSalvo);
         Pet petAtualizado = petRepository.save(petSalvo);
 
-        PetEndereco enderecoAtualizado = new PetEndereco();
-        enderecoAtualizado.setRua("Rua atualizada");
-        enderecoAtualizado.setCidade("cidade atualizada");
-        enderecoAtualizado.setNumeroCasa("55");
 
         PetUpdateDto dadosAtualizados = new PetUpdateDto(
                 "José atualizado",
-                enderecoAtualizado,
                 6,
                 new BigDecimal("7"),
                 "Persa"
@@ -344,9 +290,6 @@ public class PetIntegrationTest extends BaseIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().nomePet()).isEqualTo("José atualizado");
-        assertThat(response.getBody().petEndereco().getRua().equals("Rua atualizada"));
-        assertThat(response.getBody().petEndereco().getCidade().equals("cidade atualizada"));
-        assertThat(response.getBody().petEndereco().getNumeroCasa().equals("55"));
         assertThat(response.getBody().raca()).isEqualTo("Persa");
         assertThat(response.getBody().idade()).isEqualTo(6);
         assertThat(response.getBody().peso()).isEqualTo(new BigDecimal("7"));
@@ -355,14 +298,9 @@ public class PetIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Atualizar pet inexistente")
     void deveAtualizarPetInexistente() {
-        PetEndereco enderecoAtualizado = new PetEndereco();
-        enderecoAtualizado.setRua("Rua das Acácias");
-        enderecoAtualizado.setCidade("Belo Horizonte");
-        enderecoAtualizado.setNumeroCasa("55");
 
         PetUpdateDto dadosAtualizados = new PetUpdateDto(
                 "José atualizado",
-                enderecoAtualizado,
                 6,
                 new BigDecimal("7"),
                 "Persa"
@@ -387,16 +325,10 @@ public class PetIntegrationTest extends BaseIntegrationTest {
         tutor.setNome("João Silva");
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-
         Pet pet = new Pet();
         pet.setNomePet("José caça rato");
         pet.setPetTipo(PetTipo.GATO);
         pet.setPetSexo(PetSexo.MACHO);
-        pet.setPetEndereco(endereco);
         pet.setIdade(5);
         pet.setPeso(new BigDecimal("4"));
         pet.setRaca("Siames");

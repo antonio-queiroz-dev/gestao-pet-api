@@ -3,6 +3,7 @@ package com.example.gestaoPetApi.integration;
 import com.example.gestaoPetApi.dto.TutorCreateDto;
 import com.example.gestaoPetApi.dto.TutorResponseDto;
 import com.example.gestaoPetApi.dto.TutorUpdateDto;
+import com.example.gestaoPetApi.model.EnderecoTutor;
 import com.example.gestaoPetApi.model.Tutor;
 import com.example.gestaoPetApi.repository.TutorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,10 +35,18 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Deve criar um tutor com sucesso")
     void deveCriarTutorComSucesso() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         TutorCreateDto request = new TutorCreateDto(
                 "João Silva",
                 "joao@email.com",
-                "11999999999"
+                "11999999999",
+                endereco
+
         );
 
         ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
@@ -55,10 +64,18 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Deve buscar um tutor por ID existente")
     void deveBuscarTutorPorIdExistente() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         Tutor tutor = new Tutor();
         tutor.setNome("João Silva");
         tutor.setEmail("joao@email.com");
         tutor.setTelefone("11999999999");
+        tutor.setEnderecoTutor(endereco);
+
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
         ResponseEntity<TutorResponseDto> response = restTemplate.getForEntity(
@@ -117,17 +134,28 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Atualizar um tutor existente")
     void deveAtualizarTutorExistente() {
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         Tutor tutor = new Tutor();
         tutor.setNome("João Silva");
         tutor.setEmail("joao@mail.com");
         tutor.setTelefone("000000000");
+        tutor.setEnderecoTutor(endereco);
         Tutor tutorSalvo = tutorRepository.save(tutor);
 
+        EnderecoTutor enderecoAtualizado = new EnderecoTutor();
+        enderecoAtualizado.setRua("Rua das Acácias");
+        enderecoAtualizado.setCidade("Belo Horizonte");
+        enderecoAtualizado.setNumeroCasa("55");
 
         TutorUpdateDto dadosAtualizado = new TutorUpdateDto(
                 "João Atualizado",
                 "emailAtualizado@mail.com",
-                "111111111");
+                "1234567891",
+                enderecoAtualizado);
 
         HttpEntity<TutorUpdateDto> requestEntity = new HttpEntity<>(dadosAtualizado);
 
@@ -141,16 +169,23 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().nome()).isEqualTo("João Atualizado");
         assertThat(response.getBody().email()).isEqualTo("emailAtualizado@mail.com");
-        assertThat(response.getBody().telefone()).isEqualTo("111111111");
+        assertThat(response.getBody().telefone()).isEqualTo("1234567891");
     }
 
     @Test
     @DisplayName("Atualizar Tutor inexistente")
     void deveAtualizarTutorInexistente() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         TutorUpdateDto dadosAtualizado = new TutorUpdateDto(
                 "João Atualizado",
                 "emailAtualizado@mail.com",
-                "111111111");
+                "1234567891",
+                endereco);
 
         HttpEntity<TutorUpdateDto> requestEntity = new HttpEntity<>(dadosAtualizado);
 
@@ -200,10 +235,17 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Tutor com nome inválido")
     void deveCriarTutorComNomeInvalido() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         TutorCreateDto request = new TutorCreateDto(
                 "",
                 "joao@mail.com",
-                "11999999999"
+                "11999999999",
+                endereco
         );
 
         ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
@@ -218,11 +260,18 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Tutor com email inválido")
     void deveCriarTutorComEmailInvalido() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         TutorCreateDto request = new TutorCreateDto(
                 "João Silva",
                 "joao",
-                "11999999999"
-        );
+                "11999999999",
+                endereco);
+
         ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
                 "/api/tutores",
                 request,
@@ -234,10 +283,17 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Tutor com telefone inválido")
     void deveCriarTutorComTelefoneInvalido() {
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
         TutorCreateDto request = new TutorCreateDto(
                 "João Silva",
                 "joao@mail.com",
-                ""
+                "",
+                endereco
         );
         ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
                 "/api/tutores",

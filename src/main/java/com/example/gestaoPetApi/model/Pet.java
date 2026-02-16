@@ -20,9 +20,6 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetSexo petSexo;
 
-    @Embedded
-    private PetEndereco petEndereco;
-
     private Integer idade;
     private BigDecimal peso;
     private String raca;
@@ -34,12 +31,11 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(long id, String nomePet, PetTipo petTipo, PetSexo petSexo, PetEndereco petEndereco, Integer idade, BigDecimal peso, String raca, Tutor tutor) {
+    public Pet(long id, String nomePet, PetTipo petTipo, PetSexo petSexo, Integer idade, BigDecimal peso, String raca, Tutor tutor) {
         this.id = id;
         this.nomePet = nomePet;
         this.petTipo = petTipo;
         this.petSexo = petSexo;
-        this.petEndereco = petEndereco;
         this.idade = idade;
         this.peso = peso;
         this.raca = raca;
@@ -72,14 +68,6 @@ public class Pet {
 
     public void setPetSexo(PetSexo petSexo) {
         this.petSexo = petSexo;
-    }
-
-    public PetEndereco getPetEndereco() {
-        return petEndereco;
-    }
-
-    public void setPetEndereco(PetEndereco petEndereco) {
-        this.petEndereco = petEndereco;
     }
 
     public Integer getIdade() {

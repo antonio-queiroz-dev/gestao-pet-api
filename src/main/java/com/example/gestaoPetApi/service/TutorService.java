@@ -31,16 +31,18 @@ public class TutorService {
                 tutor.getId(),
                 tutor.getNome(),
                 tutor.getEmail(),
-                tutor.getTelefone());
+                tutor.getTelefone(),
+                tutor.getEnderecoTutor());
     }
 
-    @CacheEvict(value = "tutores", allEntries = true)
+    @CacheEvict(value = "tutor", allEntries = true)
     public Tutor registrarTutor(TutorCreateDto tutorCreateDto) {
         Tutor tutor = new Tutor();
 
         tutor.setNome(tutorCreateDto.nome());
         tutor.setEmail(tutorCreateDto.email());
         tutor.setTelefone(tutorCreateDto.telefone());
+        tutor.setEnderecoTutor(tutorCreateDto.enderecoTutor());
 
         return tutorRepository.save(tutor);
     }
@@ -62,6 +64,9 @@ public class TutorService {
         }
         if (tutorUpdateDto.telefone() != null) {
             tutorExistente.setTelefone(tutorUpdateDto.telefone());
+        }
+        if (tutorUpdateDto.enderecoTutor() != null) {
+            tutorExistente.setEnderecoTutor(tutorUpdateDto.enderecoTutor());
         }
 
         return tutorRepository.save(tutorExistente);

@@ -1,6 +1,6 @@
 package com.example.gestaoPetApi.dto;
 
-import com.example.gestaoPetApi.model.PetEndereco;
+import com.example.gestaoPetApi.model.EnderecoTutor;
 import com.example.gestaoPetApi.model.PetSexo;
 import com.example.gestaoPetApi.model.PetTipo;
 import jakarta.validation.constraints.*;
@@ -16,7 +16,6 @@ public record PetCreateDto(
 
         PetTipo petTipo,
         PetSexo petSexo,
-        PetEndereco petEndereco,
 
         @Max(value = 20, message = "A idade não pode ser maior que 20")
         Integer idade,

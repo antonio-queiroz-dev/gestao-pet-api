@@ -1,11 +1,14 @@
 package com.example.gestaoPetApi.dto;
 
 
+import com.example.gestaoPetApi.model.EnderecoTutor;
+
 import java.io.Serializable;
 
 
 public record TutorResponseDto(Long id,
                                String nome,
                                String email,
-                               String telefone) implements Serializable {
+                               String telefone,
+                               EnderecoTutor enderecoTutor) implements Serializable {
 }

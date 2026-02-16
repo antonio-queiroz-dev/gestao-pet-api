@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class PetEndereco implements Serializable {
+public class EnderecoTutor implements Serializable {
 
     private String numeroCasa;
     private String cidade;

@@ -40,11 +40,8 @@ class PetServiceTest {
     void deveRetornarUmalistaComUmPet() {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-        Pet pet = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4.0"), "Siames", tutor);
+
+        Pet pet = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4.0"), "Siames", tutor);
 
         when(petRepository.findAll()).thenReturn(Collections.singletonList(pet));
         List<PetResponseDto> pets = petService.listarPets();
@@ -66,16 +63,16 @@ class PetServiceTest {
     @Test
     @DisplayName("Deve cadastrar um pet com sucesso")
     void deveCadastrarUmPetComSucesso() {
-        Tutor tutor = new Tutor(1L, "João", "joao@email.com", "123456789", new ArrayList<>());
-
-        PetEndereco endereco = new PetEndereco();
+        EnderecoTutor endereco = new EnderecoTutor();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        
-        PetCreateDto petCreateDto = new PetCreateDto("José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames", tutor.getId());
 
-        Pet petSalvo = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames", tutor);
+        Tutor tutor = new Tutor(1L, "João", "joao@email.com", "123456789",endereco, new ArrayList<>());
+
+        PetCreateDto petCreateDto = new PetCreateDto("José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames", tutor.getId());
+
+        Pet petSalvo = new Pet(1L, "José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames", tutor);
 
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutor));
         when(petRepository.save(any(Pet.class))).thenReturn(petSalvo);
@@ -86,7 +83,6 @@ class PetServiceTest {
         Assertions.assertEquals(petCreateDto.nomePet(), resultado.getNomePet());
         Assertions.assertEquals(petCreateDto.petTipo(), resultado.getPetTipo());
         Assertions.assertEquals(petCreateDto.petSexo(), resultado.getPetSexo());
-        Assertions.assertEquals(petCreateDto.petEndereco(), resultado.getPetEndereco());
         Assertions.assertEquals(petCreateDto.idade(), resultado.getIdade());
         Assertions.assertEquals(petCreateDto.peso(), resultado.getPeso());
         Assertions.assertEquals(petCreateDto.raca(), resultado.getRaca());
@@ -106,13 +102,13 @@ class PetServiceTest {
     @Test
     @DisplayName("Deve lançar exceção se o pet não for encontrado")
     void deveLancarExcecaoPetNaoEcontrado() {
-        PetEndereco endereco = new PetEndereco();
+        EnderecoTutor endereco = new EnderecoTutor();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
 
         when(petRepository.findById(1L)).thenReturn(Optional.empty());
-        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, 5, new BigDecimal("4"), "Siames");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato",  5, new BigDecimal("4"), "Siames");
 
         Assertions.assertThrows(RecursoNaoEcontradoException.class, () -> petService.updatePet(1L,petUpdateDto ));
     }
@@ -123,13 +119,9 @@ class PetServiceTest {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"Antigo Nome", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames",tutor);
+        Pet existente = new Pet(1L,"Antigo Nome", PetTipo.GATO, PetSexo.MACHO,  5, new BigDecimal("4"), "Siames",tutor);
 
-        PetUpdateDto petUpdateDto = new PetUpdateDto("Novo nome", endereco, 5, new BigDecimal("4"), "Siames");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("Novo nome",  5, new BigDecimal("4"), "Siames");
 
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);
@@ -145,24 +137,15 @@ class PetServiceTest {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
 
-        PetEndereco enderecoExistente = new PetEndereco();
-        enderecoExistente.setRua("Rua das Acácias");
-        enderecoExistente.setCidade("Belo Horizonte");
-        enderecoExistente.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, enderecoExistente, 5, new BigDecimal("4"), "Siames",tutor);
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames",tutor);
 
-        PetEndereco enderecoNovo = new PetEndereco();
-        enderecoNovo.setRua("Rua das Acácias");
-        enderecoNovo.setCidade("Belo Horizonte");
-        enderecoNovo.setNumeroCasa("55");
-        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", enderecoNovo, 5, new BigDecimal("4"), "Siames");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", 5, new BigDecimal("4"), "Siames");
 
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);
 
         Pet atualizado = petService.updatePet(1L, petUpdateDto);
 
-        Assertions.assertEquals(petUpdateDto.petEndereco(), atualizado.getPetEndereco());
     }
 
     @Test
@@ -171,13 +154,13 @@ class PetServiceTest {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
 
-        PetEndereco endereco = new PetEndereco();
+        EnderecoTutor endereco = new EnderecoTutor();
         endereco.setRua("Rua das Acácias");
         endereco.setCidade("Belo Horizonte");
         endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames", tutor);
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames", tutor);
 
-        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, 10, new BigDecimal("4"), "Siames");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", 10, new BigDecimal("4"), "Siames");
 
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);
@@ -193,13 +176,9 @@ class PetServiceTest {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames", tutor);
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames", tutor);
 
-        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, 5, new BigDecimal("10"), "Siames");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", 5, new BigDecimal("10"), "Siames");
 
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);
@@ -215,13 +194,9 @@ class PetServiceTest {
         Tutor tutor = new Tutor();
         tutor.setNome("João");
 
-        PetEndereco endereco = new PetEndereco();
-        endereco.setRua("Rua das Acácias");
-        endereco.setCidade("Belo Horizonte");
-        endereco.setNumeroCasa("55");
-        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, endereco, 5, new BigDecimal("4"), "Siames", tutor);
+        Pet existente = new Pet(1L,"José caça rato", PetTipo.GATO, PetSexo.MACHO, 5, new BigDecimal("4"), "Siames", tutor);
 
-        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", endereco, 5, new BigDecimal("4"), "Persa");
+        PetUpdateDto petUpdateDto = new PetUpdateDto("José caça rato", 5, new BigDecimal("4"), "Persa");
 
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);

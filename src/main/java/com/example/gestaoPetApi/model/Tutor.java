@@ -22,13 +22,16 @@ public class Tutor {
 
     private String telefone;
 
+    @Embedded
+    private EnderecoTutor enderecoTutor;
+
     @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
 
     public Tutor() {
     }
 
-    public Tutor(long id, String nome, String email, String telefone, List<Pet> pets) {
+    public Tutor(long id, String nome, String email, String telefone, EnderecoTutor enderecoTutor, List<Pet> pets) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -62,6 +65,14 @@ public class Tutor {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public EnderecoTutor getEnderecoTutor() {
+        return enderecoTutor;
+    }
+
+    public void setEnderecoTutor(EnderecoTutor enderecoTutor) {
+        this.enderecoTutor = enderecoTutor;
     }
 
     public List<Pet> getPets() {

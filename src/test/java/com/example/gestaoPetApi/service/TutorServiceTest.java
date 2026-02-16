@@ -4,6 +4,7 @@ import com.example.gestaoPetApi.dto.TutorCreateDto;
 import com.example.gestaoPetApi.dto.TutorResponseDto;
 import com.example.gestaoPetApi.dto.TutorUpdateDto;
 import com.example.gestaoPetApi.exceptions.RecursoNaoEcontradoException;
+import com.example.gestaoPetApi.model.EnderecoTutor;
 import com.example.gestaoPetApi.model.Pet;
 import com.example.gestaoPetApi.model.Tutor;
 import com.example.gestaoPetApi.repository.TutorRepository;
@@ -35,7 +36,13 @@ public class TutorServiceTest {
     @DisplayName("Deve retornar uma lista com um tutor")
     void deveRetornarUmalistaComUmTutor() {
         List<Pet> pets = new ArrayList<>();
-        Tutor tutor = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212", pets);
+
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        Tutor tutor = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212",endereco, pets);
 
         when(tutorRepository.findAll()).thenReturn(Collections.singletonList(tutor));
         List<TutorResponseDto> tutores = tutorService.listarTutores();
@@ -58,8 +65,13 @@ public class TutorServiceTest {
     void deveCadastrarUmTutorComSucesso() {
         List<Pet> pets = new ArrayList<>();
 
-        TutorCreateDto tutorCreateDto = new TutorCreateDto("João Silva", "joao@mail.com", "(99) 99111-2212");
-        Tutor tutorSalvo = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212", pets);
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        TutorCreateDto tutorCreateDto = new TutorCreateDto("João Silva", "joao@mail.com", "(99) 99111-2212", endereco);
+        Tutor tutorSalvo = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212",endereco, pets);
 
         when(tutorRepository.save(any(Tutor.class))).thenReturn(tutorSalvo);
 
@@ -88,7 +100,12 @@ public class TutorServiceTest {
     void deveLancarExcecaoTutorNaoEcontrado() {
         when(tutorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva","joao@mail.com","(99) 00111-2212");
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva","joao@mail.com","(99) 00111-2212", endereco);
 
         Assertions.assertThrows(RecursoNaoEcontradoException.class, () -> tutorService.updateTutor(1L,tutorUpdateDto));
 
@@ -98,9 +115,20 @@ public class TutorServiceTest {
     @DisplayName("Atualiza o nome corretamente")
     void atualizaNome() {
         List<Pet> pets = new ArrayList<>();
-        Tutor tutorExistente = new Tutor(1L, "Antigo nome", "joao@mail.com", "(99) 99111-2212", pets);
 
-        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("Novo nome", "joao@mail.com", "(99) 99111-2212");
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        Tutor tutorExistente = new Tutor(1L, "Antigo nome", "joao@mail.com", "(99) 99111-2212",endereco, pets);
+
+        EnderecoTutor enderecoUpdate = new EnderecoTutor();
+        endereco.setRua("Nova Rua");
+        endereco.setCidade("Nova cidade");
+        endereco.setNumeroCasa("77");
+
+        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("Novo nome", "joao@mail.com", "(99) 99111-2212", enderecoUpdate);
 
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorExistente));
         when(tutorRepository.save(tutorExistente)).thenReturn(tutorExistente);
@@ -114,9 +142,15 @@ public class TutorServiceTest {
     @DisplayName("Atualiza o email corretamente")
     void atualizaEmail() {
         List<Pet> pets = new ArrayList<>();
-        Tutor tutorExistente = new Tutor(1L, "João Silva", "antigoemail@mail.com", "(99) 99111-2212", pets);
 
-        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva", "novoemail@mail.com", "(99) 99111-2212");
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        Tutor tutorExistente = new Tutor(1L, "João Silva", "antigoemail@mail.com", "(99) 99111-2212",endereco , pets);
+
+        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva", "novoemail@mail.com", "(99) 99111-2212", endereco);
 
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorExistente));
         when(tutorRepository.save(tutorExistente)).thenReturn(tutorExistente);
@@ -130,9 +164,15 @@ public class TutorServiceTest {
     @DisplayName("Atualiza o telefone corretamente")
     void atualizaTelefone() {
         List<Pet> pets = new ArrayList<>();
-        Tutor tutorExistente = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212", pets);
 
-        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva", "joao@mail.com", "(99) 91234-5678");
+        EnderecoTutor endereco = new EnderecoTutor();
+        endereco.setRua("Rua das Acácias");
+        endereco.setCidade("Belo Horizonte");
+        endereco.setNumeroCasa("55");
+
+        Tutor tutorExistente = new Tutor(1L, "João Silva", "joao@mail.com", "(99) 99111-2212", endereco ,pets);
+
+        TutorUpdateDto tutorUpdateDto = new TutorUpdateDto("João Silva", "joao@mail.com", "(99) 91234-5678", endereco);
 
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorExistente));
         when(tutorRepository.save(tutorExistente)).thenReturn(tutorExistente);
