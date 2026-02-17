@@ -18,7 +18,7 @@ import java.util.Map;
 public class RedisConfig {
 
     @Bean
-    public RedisCacheConfiguration CacheConfiguration() {
+    public RedisCacheConfiguration cacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30))
                 .disableCachingNullValues()
@@ -34,17 +34,15 @@ public class RedisConfig {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
         cacheConfigurations.put("pets",
-                RedisCacheConfiguration.defaultCacheConfig()
-                        .entryTtl(Duration.ofMinutes(15))
+                cacheConfiguration().entryTtl(Duration.ofMinutes(15))
         );
 
         cacheConfigurations.put("tutor",
-                RedisCacheConfiguration.defaultCacheConfig()
-                        .entryTtl(Duration.ofMinutes(30))
+                cacheConfiguration().entryTtl(Duration.ofMinutes(30))
         );
 
         return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(CacheConfiguration())
+                .cacheDefaults(cacheConfiguration())
                 .withInitialCacheConfigurations(cacheConfigurations)
                 .build();
     }

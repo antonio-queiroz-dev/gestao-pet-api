@@ -3,7 +3,6 @@ package com.example.gestaoPetApi.controller;
 import com.example.gestaoPetApi.dto.PetCreateDto;
 import com.example.gestaoPetApi.dto.PetResponseDto;
 import com.example.gestaoPetApi.dto.PetUpdateDto;
-import com.example.gestaoPetApi.model.Pet;
 import com.example.gestaoPetApi.service.PetService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,74 +29,47 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<PetResponseDto> cadastrarPet(@Valid @RequestBody PetCreateDto petdto) {
-        Pet novoPet = petService.registrarPet(petdto);
-
-        PetResponseDto response = new PetResponseDto(
-                novoPet.getId(),
-                novoPet.getNomePet(),
-                novoPet.getPetTipo(),
-                novoPet.getPetSexo(),
-                novoPet.getIdade(),
-                novoPet.getPeso(),
-                novoPet.getRaca(),
-                petdto.tutorId()
-                );
-
+        PetResponseDto response = petService.registrarPet(petdto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PetResponseDto> updatePet(@PathVariable Long id, @RequestBody PetUpdateDto petDetails) {
-        Pet petAtualizado = petService.updatePet(id, petDetails);
-
-        PetResponseDto responseDto = new PetResponseDto(
-                petAtualizado.getId(),
-                petAtualizado.getNomePet(),
-                petAtualizado.getPetTipo(),
-                petAtualizado.getPetSexo(),
-                petAtualizado.getIdade(),
-                petAtualizado.getPeso(),
-                petAtualizado.getRaca(),
-                petAtualizado.getTutor() != null ? petAtualizado.getTutor().getId() : null
-        );
-
+    public ResponseEntity<PetResponseDto> updatePet(@PathVariable Long id, @Valid @RequestBody PetUpdateDto petDetails) {
+        PetResponseDto responseDto = petService.updatePet(id, petDetails);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/buscar/nome")
-    public ResponseEntity<List<PetResponseDto>> buscarPetPorNome(@RequestParam String nome) {
+    public ResponseEntity<List<PetResponseDto>> buscarPetPorNome(@RequestParam(required = false) String nome) {
+        if (nome == null || nome.isBlank()) {
+            return listarPets();
+        }
         List<PetResponseDto> petList = petService.buscarPorNome(nome);
         return ResponseEntity.ok(petList);
     }
 
     @GetMapping("/buscar/sexo")
-    public ResponseEntity<List<PetResponseDto>> buscarPorSexo(@RequestParam String sexo) {
+    public ResponseEntity<List<PetResponseDto>> buscarPorSexo(@RequestParam(required = false) String sexo) {
+        if (sexo == null || sexo.isBlank()) {
+            return listarPets();
+        }
         List<PetResponseDto> petList = petService.buscarPorSexo(sexo);
         return ResponseEntity.ok(petList);
     }
 
     @GetMapping("/buscar/idade")
-    public ResponseEntity<List<PetResponseDto>> buscarPorIdade(@RequestParam Integer idade) {
+    public ResponseEntity<List<PetResponseDto>> buscarPorIdade(@RequestParam(required = false) Integer idade) {
+        if (idade == null) {
+            return listarPets();
+        }
         List<PetResponseDto> petList = petService.buscarPorIdade(idade);
         return ResponseEntity.ok(petList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PetResponseDto> buscarPorId(@PathVariable Long id) {
-        Pet pet = petService.buscarPorId(id);
-
-        PetResponseDto responseDto = new PetResponseDto(
-                pet.getId(),
-                pet.getNomePet(),
-                pet.getPetTipo(),
-                pet.getPetSexo(),
-                pet.getIdade(),
-                pet.getPeso(),
-                pet.getRaca(),
-                pet.getTutor() != null ? pet.getTutor().getId() : null
-        );
+        PetResponseDto responseDto = petService.buscarPorId(id);
         return ResponseEntity.ok(responseDto);
-
     }
 
     @GetMapping("/tutor/{tutorId}")

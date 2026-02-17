@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class TutorService {
 
-    private TutorRepository tutorRepository;
+    private final TutorRepository tutorRepository;
 
     public TutorService(TutorRepository tutorRepository) {
         this.tutorRepository = tutorRepository;
@@ -32,7 +32,7 @@ public class TutorService {
     }
 
     @CacheEvict(value = "tutorList", allEntries = true)
-    public Tutor registrarTutor(TutorCreateDto tutorCreateDto) {
+    public TutorResponseDto registrarTutor(TutorCreateDto tutorCreateDto) {
         Tutor tutor = new Tutor();
 
         tutor.setNome(tutorCreateDto.nome());
@@ -40,14 +40,15 @@ public class TutorService {
         tutor.setTelefone(tutorCreateDto.telefone());
         tutor.setEnderecoTutor(tutorCreateDto.enderecoTutor());
 
-        return tutorRepository.save(tutor);
+        tutor = tutorRepository.save(tutor);
+        return toResponseDto(tutor);
     }
 
     @Caching(evict = {
             @CacheEvict(value = "tutor", key = "#id"),
             @CacheEvict(value = "tutorList", allEntries = true)
     })
-    public Tutor updateTutor(Long id, TutorUpdateDto tutorUpdateDto) {
+    public TutorResponseDto updateTutor(Long id, TutorUpdateDto tutorUpdateDto) {
         Optional<Tutor> optionalTutor = tutorRepository.findById(id);
 
         if (optionalTutor.isEmpty()) {
@@ -69,38 +70,28 @@ public class TutorService {
             tutorExistente.setEnderecoTutor(tutorUpdateDto.enderecoTutor());
         }
 
-        return tutorRepository.save(tutorExistente);
+        tutorExistente = tutorRepository.save(tutorExistente);
+        return toResponseDto(tutorExistente);
     }
 
     @Cacheable(value = "tutorList", key = "'nome:' + #nome")
     public List<TutorResponseDto> buscarPorNome(String nome) {
         List<Tutor> listaRetorno;
-
-        if (nome == null || nome.isBlank()) {
-            listaRetorno = tutorRepository.findAll();
-        } else {
-            listaRetorno = tutorRepository.findByNomeContainingIgnoreCase(nome);
-        }
+        listaRetorno = tutorRepository.findByNomeContainingIgnoreCase(nome);
         return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @Cacheable(value = "tutorList", key = "'email:' + #email")
     public List<TutorResponseDto> buscarPorEmail(String email) {
-        List<Tutor> listaRetorno;
-
-        if (email == null || email.isBlank()) {
-            listaRetorno = tutorRepository.findAll();
-        } else {
-            listaRetorno = tutorRepository.findByEmailContainingIgnoreCase(email);
-        }
-
+        List<Tutor> listaRetorno = tutorRepository.findByEmailContainingIgnoreCase(email);
         return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @Cacheable(value = "tutor", key = "#id")
-    public Tutor buscarPorId(Long id) {
-        return tutorRepository.findById(id)
+    public TutorResponseDto buscarPorId(Long id) {
+        Tutor tutor = tutorRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEcontradoException("Tutor com o Id:" + id + " não encontrado"));
+        return toResponseDto(tutor);
     }
 
 

@@ -3,7 +3,6 @@ package com.example.gestaoPetApi.controller;
 import com.example.gestaoPetApi.dto.TutorCreateDto;
 import com.example.gestaoPetApi.dto.TutorResponseDto;
 import com.example.gestaoPetApi.dto.TutorUpdateDto;
-import com.example.gestaoPetApi.model.Tutor;
 import com.example.gestaoPetApi.service.TutorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,58 +29,38 @@ public class TutorController {
 
     @PostMapping
     public ResponseEntity<TutorResponseDto> cadastrarTutor(@Valid @RequestBody TutorCreateDto tutorCreateDto) {
-        Tutor novoTutor = tutorService.registrarTutor(tutorCreateDto);
-
-        TutorResponseDto responseDto = new TutorResponseDto(
-                novoTutor.getId(),
-                novoTutor.getNome(),
-                novoTutor.getEmail(),
-                novoTutor.getTelefone(),
-                novoTutor.getEnderecoTutor()
-        );
-
+        TutorResponseDto responseDto = tutorService.registrarTutor(tutorCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TutorResponseDto> updateTutor(@PathVariable Long id, @Valid @RequestBody TutorUpdateDto tutorUpdateDto) {
-        Tutor updateTutor = tutorService.updateTutor(id, tutorUpdateDto);
-
-        TutorResponseDto responseDto = new TutorResponseDto(
-                updateTutor.getId(),
-                updateTutor.getNome(),
-                updateTutor.getEmail(),
-                updateTutor.getTelefone(),
-                updateTutor.getEnderecoTutor()
-        );
+        TutorResponseDto responseDto = tutorService.updateTutor(id, tutorUpdateDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/buscar/nome")
-    public ResponseEntity<List<TutorResponseDto>> buscarPorNome(@RequestParam String nome) {
+    public ResponseEntity<List<TutorResponseDto>> buscarPorNome(@RequestParam(required = false) String nome) {
+        if (nome == null || nome.isBlank()) {
+            return listarTutores();
+        }
         List<TutorResponseDto> tutoresList = tutorService.buscarPorNome(nome);
         return ResponseEntity.ok(tutoresList);
     }
 
     @GetMapping("/buscar/email")
-    public ResponseEntity<List<TutorResponseDto>> buscarPorEmail(@RequestParam String email) {
+    public ResponseEntity<List<TutorResponseDto>> buscarPorEmail(@RequestParam(required = false) String email) {
+        if (email == null || email.isBlank()) {
+            return listarTutores();
+        }
         List<TutorResponseDto> tutoresList = tutorService.buscarPorEmail(email);
         return ResponseEntity.ok(tutoresList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TutorResponseDto> buscarPorId(@PathVariable Long id) {
-        Tutor tutor = tutorService.buscarPorId(id);
-
-        TutorResponseDto tutorResponseDto = new TutorResponseDto(
-                tutor.getId(),
-                tutor.getNome(),
-                tutor.getEmail(),
-                tutor.getTelefone(),
-                tutor.getEnderecoTutor()
-        );
+        TutorResponseDto tutorResponseDto = tutorService.buscarPorId(id);
         return ResponseEntity.ok(tutorResponseDto);
-
     }
 
     @DeleteMapping("/{id}")

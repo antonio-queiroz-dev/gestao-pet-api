@@ -116,15 +116,15 @@ class PetServiceTest {
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorPadrao));
         when(petRepository.save(any(Pet.class))).thenReturn(petPadrao);
 
-        Pet resultado = petService.registrarPet(petCreateDto);
+        PetResponseDto resultado = petService.registrarPet(petCreateDto);
 
-        Assertions.assertEquals(1L, resultado.getId());
-        Assertions.assertEquals(petCreateDto.nomePet(), resultado.getNomePet());
-        Assertions.assertEquals(petCreateDto.petTipo(), resultado.getPetTipo());
-        Assertions.assertEquals(petCreateDto.petSexo(), resultado.getPetSexo());
-        Assertions.assertEquals(petCreateDto.idade(), resultado.getIdade());
-        Assertions.assertEquals(petCreateDto.peso(), resultado.getPeso());
-        Assertions.assertEquals(petCreateDto.raca(), resultado.getRaca());
+        Assertions.assertEquals(1L, resultado.id());
+        Assertions.assertEquals(petCreateDto.nomePet(), resultado.nomePet());
+        Assertions.assertEquals(petCreateDto.petTipo(), resultado.petTipo());
+        Assertions.assertEquals(petCreateDto.petSexo(), resultado.petSexo());
+        Assertions.assertEquals(petCreateDto.idade(), resultado.idade());
+        Assertions.assertEquals(petCreateDto.peso(), resultado.peso());
+        Assertions.assertEquals(petCreateDto.raca(), resultado.raca());
 
         verify(tutorRepository).findById(TUTOR_ID);
         verify(petRepository).save(any(Pet.class));
@@ -174,9 +174,9 @@ class PetServiceTest {
         when(petRepository.findById(PET_ID)).thenReturn(Optional.of(petPadrao));
         when(petRepository.save(any(Pet.class))).thenReturn(petPadrao);
 
-        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+        PetResponseDto atualizado = petService.updatePet(1L, petUpdateDto);
 
-        Assertions.assertEquals(petUpdateDto.nomePet(), atualizado.getNomePet());
+        Assertions.assertEquals(petUpdateDto.nomePet(), atualizado.nomePet());
 
         verify(petRepository).findById(PET_ID);
         verify(petRepository).save(any(Pet.class));
@@ -197,9 +197,9 @@ class PetServiceTest {
         when(petRepository.findById(PET_ID)).thenReturn(Optional.of(petPadrao));
         when(petRepository.save(any(Pet.class))).thenReturn(petPadrao);
 
-        Pet resultado = petService.updatePet(PET_ID, petUpdateDto);
+        PetResponseDto resultado = petService.updatePet(PET_ID, petUpdateDto);
 
-        Assertions.assertEquals(petUpdateDto.idade(), resultado.getIdade());
+        Assertions.assertEquals(petUpdateDto.idade(), resultado.idade());
 
         verify(petRepository).findById(PET_ID);
         verify(petRepository).save(any(Pet.class));
@@ -218,9 +218,9 @@ class PetServiceTest {
         when(petRepository.findById(1L)).thenReturn(Optional.of(petPadrao));
         when(petRepository.save(any(Pet.class))).thenReturn(petPadrao);
 
-        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+        PetResponseDto atualizado = petService.updatePet(1L, petUpdateDto);
 
-        Assertions.assertEquals(petUpdateDto.peso(), atualizado.getPeso());
+        Assertions.assertEquals(petUpdateDto.peso(), atualizado.peso());
 
         verify(petRepository).findById(PET_ID);
         verify(petRepository).save(any(Pet.class));
@@ -246,9 +246,9 @@ class PetServiceTest {
         when(petRepository.findById(1L)).thenReturn(Optional.of(existente));
         when(petRepository.save(existente)).thenReturn(existente);
 
-        Pet atualizado = petService.updatePet(1L, petUpdateDto);
+        PetResponseDto atualizado = petService.updatePet(1L, petUpdateDto);
 
-        Assertions.assertEquals(petUpdateDto.raca(), atualizado.getRaca());
+        Assertions.assertEquals(petUpdateDto.raca(), atualizado.raca());
 
         verify(petRepository).findById(PET_ID);
         verify(petRepository).save(any(Pet.class));

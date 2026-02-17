@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PetService {
@@ -37,7 +38,7 @@ public class PetService {
 
 
     @CacheEvict(value = "petsList", allEntries = true)
-    public Pet registrarPet(PetCreateDto petCreate) {
+    public PetResponseDto registrarPet(PetCreateDto petCreate) {
         if (petCreate.tutorId() == null) {
             throw new RecursoNaoEcontradoException("Tutor deve ser informado");
         }
@@ -54,14 +55,15 @@ public class PetService {
         pet.setRaca(petCreate.raca());
         pet.setTutor(tutor);
 
-        return petRepository.save(pet);
+        pet = petRepository.save(pet);
+        return toResponseDto(pet);
     }
 
     @Caching(evict = {
             @CacheEvict(value = "pets", key = "#id"),
             @CacheEvict(value = "petsList", allEntries = true)
     })
-    public Pet updatePet(Long id, PetUpdateDto petDetails) {
+    public PetResponseDto updatePet(Long id, PetUpdateDto petDetails) {
 
         Pet existingPet = petRepository.findById(id).
                 orElseThrow(() -> new RecursoNaoEcontradoException("Pet com o ID: " + id + " não encontrado"));
@@ -79,49 +81,33 @@ public class PetService {
             existingPet.setRaca(petDetails.raca());
         }
 
-        return petRepository.save(existingPet);
+        existingPet = petRepository.save(existingPet);
+        return toResponseDto(existingPet);
     }
 
     @Cacheable(value = "petsList", key = "'nome:' + #nome")
     public List<PetResponseDto> buscarPorNome(String nome) {
-        List<Pet> listaRetorno;
-
-        if (nome == null || nome.isBlank()) {
-            listaRetorno = petRepository.findAll();
-        } else {
-            listaRetorno = petRepository.findByNomePetContainingIgnoreCase(nome);
-        }
+        List<Pet> listaRetorno = petRepository.findByNomePetContainingIgnoreCase(nome);
         return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @Cacheable(value = "petsList", key = "'sexo:' + #sexo")
     public List<PetResponseDto> buscarPorSexo(String sexo) {
-        List<Pet> listaRetorno;
-
-        if (sexo == null || sexo.isBlank()) {
-            listaRetorno = petRepository.findAll();
-        } else {
-            listaRetorno = petRepository.findByPetSexo(PetSexo.valueOf(sexo.toUpperCase()));
-        }
+        List<Pet> listaRetorno = petRepository.findByPetSexo(PetSexo.valueOf(sexo.toUpperCase()));
         return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @Cacheable(value = "petsList", key = "'idade:' + #idade")
     public List<PetResponseDto> buscarPorIdade(Integer idade) {
-        List<Pet> listarRetorno;
-        if (idade == null) {
-            listarRetorno = petRepository.findAll();
-        } else {
-            listarRetorno = petRepository.findByIdade(idade);
-        }
-
+        List<Pet> listarRetorno = petRepository.findByIdade(idade);
         return listarRetorno.stream().map(this::toResponseDto).toList();
     }
 
     @Cacheable(value = "pets", key = "#id")
-    public Pet buscarPorId(Long id) {
-        return petRepository.findById(id)
+    public PetResponseDto buscarPorId(Long id) {
+        Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEcontradoException("Pet com o ID: " + id + " não encontrado"));
+        return toResponseDto(pet);
     }
 
     @Cacheable(value = "petsList", key = "'tutor:' + #tutorId")

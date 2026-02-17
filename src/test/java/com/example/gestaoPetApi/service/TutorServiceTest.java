@@ -125,12 +125,12 @@ public class TutorServiceTest {
 
         when(tutorRepository.save(any(Tutor.class))).thenReturn(tutorPadrao);
 
-        Tutor resultado = tutorService.registrarTutor(tutorCreateDto);
+        TutorResponseDto resultado = tutorService.registrarTutor(tutorCreateDto);
 
-        Assertions.assertEquals(1L, resultado.getId());
-        Assertions.assertEquals(tutorCreateDto.nome(), resultado.getNome());
-        Assertions.assertEquals(tutorCreateDto.email(), resultado.getEmail());
-        Assertions.assertEquals(tutorCreateDto.telefone(), resultado.getTelefone());
+        Assertions.assertEquals(1L, resultado.id());
+        Assertions.assertEquals(tutorCreateDto.nome(), resultado.nome());
+        Assertions.assertEquals(tutorCreateDto.email(), resultado.email());
+        Assertions.assertEquals(tutorCreateDto.telefone(), resultado.telefone());
 
 
         verify(tutorRepository).save(any(Tutor.class));
@@ -169,7 +169,7 @@ public class TutorServiceTest {
     @Test
     @DisplayName("Atualiza o nome corretamente")
     void atualizaNome() {
-       String novoNome = "Novo nome";
+        String novoNome = "Novo nome";
 
         TutorUpdateDto tutorUpdateDto = new TutorUpdateDto(
                 novoNome,
@@ -180,9 +180,9 @@ public class TutorServiceTest {
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorPadrao));
         when(tutorRepository.save(any(Tutor.class))).thenReturn(tutorPadrao);
 
-        Tutor atualizado = tutorService.updateTutor(TUTOR_ID, tutorUpdateDto);
+        TutorResponseDto atualizado = tutorService.updateTutor(TUTOR_ID, tutorUpdateDto);
 
-        Assertions.assertEquals(tutorUpdateDto.nome(), atualizado.getNome());
+        Assertions.assertEquals(tutorUpdateDto.nome(), atualizado.nome());
 
         verify(tutorRepository).findById(TUTOR_ID);
         verify(tutorRepository).save(any(Tutor.class));
@@ -200,9 +200,9 @@ public class TutorServiceTest {
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorPadrao));
         when(tutorRepository.save(any(Tutor.class))).thenReturn(tutorPadrao);
 
-        Tutor atualizado = tutorService.updateTutor(TUTOR_ID, tutorUpdateDto);
+        TutorResponseDto atualizado = tutorService.updateTutor(TUTOR_ID, tutorUpdateDto);
 
-        Assertions.assertEquals(tutorUpdateDto.email(), atualizado.getEmail());
+        Assertions.assertEquals(tutorUpdateDto.email(), atualizado.email());
 
         verify(tutorRepository).findById(TUTOR_ID);
         verify(tutorRepository).save(any(Tutor.class));
@@ -219,9 +219,9 @@ public class TutorServiceTest {
         when(tutorRepository.findById(1L)).thenReturn(Optional.of(tutorPadrao));
         when(tutorRepository.save(any(Tutor.class))).thenReturn(tutorPadrao);
 
-        Tutor atualizado = tutorService.updateTutor(1L, tutorUpdateDto);
+        TutorResponseDto atualizado = tutorService.updateTutor(1L, tutorUpdateDto);
 
-        Assertions.assertEquals(tutorUpdateDto.telefone(), atualizado.getTelefone());
+        Assertions.assertEquals(tutorUpdateDto.telefone(), atualizado.telefone());
 
         verify(tutorRepository).findById(TUTOR_ID);
         verify(tutorRepository).save(any(Tutor.class));
