@@ -3,7 +3,7 @@ package com.example.gestaoPetApi.service;
 import com.example.gestaoPetApi.dto.PetCreateDto;
 import com.example.gestaoPetApi.dto.PetResponseDto;
 import com.example.gestaoPetApi.dto.PetUpdateDto;
-import com.example.gestaoPetApi.exceptions.RecursoNaoEcontradoException;
+import com.example.gestaoPetApi.exceptions.RecursoNaoEncontradoException;
 import com.example.gestaoPetApi.model.Pet;
 import com.example.gestaoPetApi.model.PetSexo;
 import com.example.gestaoPetApi.model.Tutor;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PetService {
@@ -40,11 +39,11 @@ public class PetService {
     @CacheEvict(value = "petsList", allEntries = true)
     public PetResponseDto registrarPet(PetCreateDto petCreate) {
         if (petCreate.tutorId() == null) {
-            throw new RecursoNaoEcontradoException("Tutor deve ser informado");
+            throw new RecursoNaoEncontradoException("Tutor deve ser informado");
         }
 
         Tutor tutor = tutorRepository.findById(petCreate.tutorId())
-                .orElseThrow(() -> new RecursoNaoEcontradoException("Tutor não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Tutor não encontrado"));
 
         Pet pet = new Pet();
         pet.setNomePet(petCreate.nomePet());
@@ -66,7 +65,7 @@ public class PetService {
     public PetResponseDto updatePet(Long id, PetUpdateDto petDetails) {
 
         Pet existingPet = petRepository.findById(id).
-                orElseThrow(() -> new RecursoNaoEcontradoException("Pet com o ID: " + id + " não encontrado"));
+                orElseThrow(() -> new RecursoNaoEncontradoException("Pet com o ID: " + id + " não encontrado"));
 
         if (petDetails.nomePet() != null) {
             existingPet.setNomePet(petDetails.nomePet());
@@ -106,7 +105,7 @@ public class PetService {
     @Cacheable(value = "pets", key = "#id")
     public PetResponseDto buscarPorId(Long id) {
         Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEcontradoException("Pet com o ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pet com o ID: " + id + " não encontrado"));
         return toResponseDto(pet);
     }
 
@@ -114,7 +113,7 @@ public class PetService {
     public List<PetResponseDto> buscarPetsPorTutorId(Long tutorId) {
 
         if (!tutorRepository.existsById(tutorId)) {
-            throw new RecursoNaoEcontradoException("Tutor com o ID: " + tutorId + " não encontrado");
+            throw new RecursoNaoEncontradoException("Tutor com o ID: " + tutorId + " não encontrado");
         }
 
         List<Pet> pets = petRepository.findByTutorId(tutorId);
@@ -138,7 +137,7 @@ public class PetService {
     public void deletarPet(Long id) {
 
         if (!petRepository.existsById(id)) {
-            throw new RecursoNaoEcontradoException("Pet com o id: " + id + " não encontrado!");
+            throw new RecursoNaoEncontradoException("Pet com o id: " + id + " não encontrado!");
         }
         petRepository.deleteById(id);
     }

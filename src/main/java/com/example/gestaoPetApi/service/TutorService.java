@@ -3,7 +3,7 @@ package com.example.gestaoPetApi.service;
 import com.example.gestaoPetApi.dto.TutorCreateDto;
 import com.example.gestaoPetApi.dto.TutorResponseDto;
 import com.example.gestaoPetApi.dto.TutorUpdateDto;
-import com.example.gestaoPetApi.exceptions.RecursoNaoEcontradoException;
+import com.example.gestaoPetApi.exceptions.RecursoNaoEncontradoException;
 import com.example.gestaoPetApi.model.Tutor;
 import com.example.gestaoPetApi.repository.TutorRepository;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,7 +52,7 @@ public class TutorService {
         Optional<Tutor> optionalTutor = tutorRepository.findById(id);
 
         if (optionalTutor.isEmpty()) {
-            throw new RecursoNaoEcontradoException("Tutor com o ID:" + id + " não encontrado");
+            throw new RecursoNaoEncontradoException("Tutor com o ID:" + id + " não encontrado");
         }
 
         Tutor tutorExistente = optionalTutor.get();
@@ -90,7 +90,7 @@ public class TutorService {
     @Cacheable(value = "tutor", key = "#id")
     public TutorResponseDto buscarPorId(Long id) {
         Tutor tutor = tutorRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEcontradoException("Tutor com o Id:" + id + " não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Tutor com o Id:" + id + " não encontrado"));
         return toResponseDto(tutor);
     }
 
@@ -102,7 +102,7 @@ public class TutorService {
     public void deletarTutor(Long id) {
 
         if (!tutorRepository.existsById(id)) {
-            throw new RecursoNaoEcontradoException("Tutor com o Id:" + id + " não encontrado");
+            throw new RecursoNaoEncontradoException("Tutor com o Id:" + id + " não encontrado");
         }
         tutorRepository.deleteById(id);
     }

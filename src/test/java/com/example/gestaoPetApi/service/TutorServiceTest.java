@@ -3,7 +3,7 @@ package com.example.gestaoPetApi.service;
 import com.example.gestaoPetApi.dto.TutorCreateDto;
 import com.example.gestaoPetApi.dto.TutorResponseDto;
 import com.example.gestaoPetApi.dto.TutorUpdateDto;
-import com.example.gestaoPetApi.exceptions.RecursoNaoEcontradoException;
+import com.example.gestaoPetApi.exceptions.RecursoNaoEncontradoException;
 import com.example.gestaoPetApi.model.*;
 import com.example.gestaoPetApi.repository.TutorRepository;
 
@@ -159,7 +159,7 @@ public class TutorServiceTest {
 
         when(tutorRepository.findById(TUTOR_ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(RecursoNaoEcontradoException.class,
+        Assertions.assertThrows(RecursoNaoEncontradoException.class,
                 () -> tutorService.updateTutor(TUTOR_ID, tutorUpdateDto));
 
         verify(tutorRepository).findById(TUTOR_ID);

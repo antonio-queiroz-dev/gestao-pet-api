@@ -3,7 +3,7 @@ package com.example.gestaoPetApi.service;
 import com.example.gestaoPetApi.dto.PetCreateDto;
 import com.example.gestaoPetApi.dto.PetResponseDto;
 import com.example.gestaoPetApi.dto.PetUpdateDto;
-import com.example.gestaoPetApi.exceptions.RecursoNaoEcontradoException;
+import com.example.gestaoPetApi.exceptions.RecursoNaoEncontradoException;
 import com.example.gestaoPetApi.model.*;
 import com.example.gestaoPetApi.repository.PetRepository;
 import com.example.gestaoPetApi.repository.TutorRepository;
@@ -53,7 +53,7 @@ class PetServiceTest {
         return new Tutor(
                 TUTOR_ID,
                 "João Silva",
-                "joao@email.com",
+                "joao@mail.com",
                 "1234567891",
                 endereco,
                 new ArrayList<>()
@@ -153,7 +153,7 @@ class PetServiceTest {
 
         when(petRepository.findById(PET_ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(RecursoNaoEcontradoException.class,
+        Assertions.assertThrows(RecursoNaoEncontradoException.class,
                 () -> petService.updatePet(1L, petUpdateDto));
 
         verify(petRepository).findById(PET_ID);
