@@ -23,4 +23,4 @@ jobs:
           cache: maven
 
       - name: testa testes unitarios
-        run: mvn clean test -Dtest='!**/*IntegrationTest'
+        run: mvn clean test
