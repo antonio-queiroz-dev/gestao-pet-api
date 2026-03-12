@@ -1,7 +1,10 @@
 # 🐾 Gestão Pet API
 
+[![CI](https://github.com/Antonio-scripts/gestao-pet-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Antonio-scripts/gestao-pet-api/actions/workflows/ci.yml)
+
 API REST desenvolvida com **Spring Boot 3**, **Java 21** e **MySQL** para o gerenciamento eficiente de pets e tutores.
-O projeto adota práticas modernas de desenvolvimento, incluindo **Dockerização completa**, **Testes de Integração com Testcontainers**, **Cache com Redis** e documentação via **Swagger UI**.
+O projeto adota práticas modernas de desenvolvimento, incluindo **Dockerização completa**, **Testes de Integração com
+Testcontainers**, **Cache com Redis** e documentação via **Swagger UI**.
 
 ---------------------------------------
 
@@ -15,10 +18,8 @@ O projeto adota práticas modernas de desenvolvimento, incluindo **Dockerizaçã
 * **Banco de Dados**: MySQL 8
 * **Cache**: Redis
 * **Containerização**: Docker & Docker Compose
-* **Testes**:
-    * JUnit 5 + Mockito (Unitários)
-    * **Testcontainers** (Integração) 
-    * **Documentação**: SpringDoc OpenAPI (Swagger UI)
+* **Testes**: JUnit 5 + Mockito (Unitários) · Testcontainers (Integração)
+* **Documentação**: SpringDoc OpenAPI (Swagger UI)
 * **Build**: Maven
 
 ---
@@ -32,7 +33,8 @@ O projeto adota práticas modernas de desenvolvimento, incluindo **Dockerizaçã
 
 ## ▶️ Como Executar (Via Docker)
 
-A maneira mais simples de rodar a aplicação é utilizando o Docker Compose. Isso subirá o banco de dados, o cache Redis e a API automaticamente.
+A maneira mais simples de rodar a aplicação é utilizando o Docker Compose. Isso subirá o banco de dados, o cache Redis e
+a API automaticamente.
 
 1. **Clone o repositório:**
    ```bash
@@ -51,6 +53,22 @@ A maneira mais simples de rodar a aplicação é utilizando o Docker Compose. Is
 
 ---
 
+## 🐳 Docker & Containerização
+
+A aplicação é totalmente containerizada. O `Dockerfile` utiliza **multi-stage build**: a primeira etapa compila o projeto com Maven e a segunda gera uma imagem final enxuta baseada apenas no JRE, reduzindo o tamanho da imagem em produção.
+
+O `docker-compose.yml` orquestra três containers com **healthcheck** configurado, garantindo que a API só suba após MySQL e Redis estarem prontos:
+
+| Container               | Imagem              | Porta  |
+|-------------------------|---------------------|--------|
+| `gestaopetapi_mysql`    | mysql:8.0           | 3306   |
+| `gestaopetapi_redis`    | redis:latest        | 6379   |
+| `gestaopetapi_backend`  | build local         | 8080   |
+
+![Docker containers](assets/Docker%20imagens.png)
+
+---
+
 ## 💻 Desenvolvimento Local (Opcional)
 
 Caso queira rodar a aplicação via IDE (IntelliJ/Eclipse) para desenvolvimento:
@@ -66,23 +84,27 @@ Caso queira rodar a aplicação via IDE (IntelliJ/Eclipse) para desenvolvimento:
 
 ## 📚 Documentação da API (Swagger)
 
-Com a aplicação rodando, acesse a documentação interativa para testar os endpoints:
+Com a aplicação rodando, acesse a documentação interativa para visualizar e testar todos os endpoints:
 
 👉 **[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)**
+
+![Swagger UI](assets/Swagger.png)
 
 ---
 
 ## 🧠 Funcionalidades Principais
 
 ### 🐶 Pets
+
 * **CRUD Completo**: Cadastro, listagem, atualização e remoção.
 * **Buscas Avançadas**: Por nome, sexo, idade e tutor.
 * **Validações de Negócio**:
     * Idade máxima de 20 anos.
     * Peso entre 0.5kg e 60kg.
-    * Validação de nome (nome e sobrenome)
+    * Validação de nome
 
 ### 👤 Tutores
+
 * **CRUD Completo**.
 * **Validação Estrutural**: Uso de Bean Validation (`@NotBlank`, `@Email`).
 
@@ -90,7 +112,8 @@ Com a aplicação rodando, acesse a documentação interativa para testar os end
 
 ## ⚡ Performance e Cache
 
-O projeto utiliza **Redis** para cachear consultas frequentes (`@Cacheable`), reduzindo a carga no banco de dados. O cache é invalidado automaticamente (`@CacheEvict`) quando dados são alterados, garantindo consistência.
+O projeto utiliza **Redis** para cachear consultas frequentes (`@Cacheable`), reduzindo a carga no banco de dados. O
+cache é invalidado automaticamente (`@CacheEvict`) quando dados são alterados, e possui um ttl de 30 minutos garantindo consistência.
 
 ---
 
@@ -98,10 +121,12 @@ O projeto utiliza **Redis** para cachear consultas frequentes (`@Cacheable`), re
 
 O projeto possui testes automatizados:
 
-1.  **Testes Unitários**: Validam a lógica de negócio isolada (Services) usando Mockito.
-2.  **Testes de Integração**: Usam **Testcontainers** para subir um banco MySQL real e descartável durante os testes, garantindo que a aplicação funcione de ponta a ponta.
+1. **Testes Unitários**: Validam a lógica de negócio isolada (Services) usando Mockito.
+2. **Testes de Integração**: Usam **Testcontainers** para subir um banco MySQL real e descartável durante os testes,
+   garantindo que a aplicação funcione de ponta a ponta.
 
 Para rodar os testes (requer Java/Maven instalados):
+
 ```bash
 mvn test
 ```
@@ -111,21 +136,37 @@ mvn test
 ## 🏗️ Arquitetura
 
 O projeto segue uma arquitetura limpa em camadas:
-* **Controller**:
-* **Service**:
-* **Repository**:
-* **DTOs (Records)**:
-* **Model**
+
+* **Controller**: Recebe as requisições HTTP, delega para o Service e retorna as respostas via DTOs.
+* **Service**: Contém a lógica de negócio, aplica validações e gerencia o cache com Redis.
+* **Repository**: Interface de acesso ao banco de dados via Spring Data JPA.
+* **DTOs (Records)**: Objetos de transferência de dados que desacoplam a API do modelo interno.
+* **Model**: Entidades JPA que representam as tabelas do banco de dados.
 
 ---
 
-## 🚧 Roadmap (Evolução)
+## 🚧 Roadmap
 
-- [x] Criar testes de integração
-- [x] Dockerizar completamente a aplicação
-- [x] Implementar Cache com Redis
-- [ ] Implementar CI/CD com GitHub Actions
-- [ ] Publicar na AWS (EC2 ou ECS)
+| Funcionalidades                      | status        |
+|--------------------------------------|---------------|
+| Criar testes unitarios               | **CONCLUÍDO** |
+| Criar testes de integração           | **CONCLUÍDO** |
+| Dockerizar completamente a aplicação | **CONCLUÍDO** |
+| Implementar Cache com Redis          | **CONCLUÍDO** |
+| Implementar CI/CD com GitHub Actions | **CONCLUÍDO** |
+| Relatório de cobertura com JaCoCo    | **CONCLUÍDO** |
+| Spring Security                      | *PENDENTE*    |
+| Implementar novos dominios           | *PENDENTE*    |
+| Implementar mensageria               | *PENDENTE*    |
+| Publicar na nuvem                    | *PENDENTE*    |
+
+---
+
+## 📊 Cobertura de Testes (JaCoCo)
+
+O projeto utiliza **JaCoCo** para gerar relatórios de cobertura de testes, integrado ao pipeline de CI.
+
+![jacoco](assets/jacoco.png)
 
 ---
 
@@ -133,4 +174,5 @@ O projeto segue uma arquitetura limpa em camadas:
 
 Desenvolvido por **Antonio Queiroz**
 
-💼 [LinkedIn](https://www.linkedin.com/in/antonio-queiroz-2983491a2/) | 🐙 [GitHub](https://github.com/Antonio-scripts)
+💼 [LinkedIn](https://www.linkedin.com/in/antonio-queiroz-dev/) | 🐙 [GitHub](https://github.com/Antonio-queiroz-dev
+)

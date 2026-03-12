@@ -118,15 +118,7 @@ public class PetService {
 
         List<Pet> pets = petRepository.findByTutorId(tutorId);
 
-        List<PetResponseDto> resultado = new ArrayList<>();
-
-        for (Pet pet : pets) {
-            PetResponseDto petResponseDto = toResponseDto(pet);
-            resultado.add(petResponseDto);
-        }
-
-        return resultado;
-
+        return pets.stream().map(this::toResponseDto).toList();
     }
 
     @Caching(evict = {

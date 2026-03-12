@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 
 public record PetCreateDto(
         @Pattern(
-                regexp = "^[A-Za-zÀ-ÿ]+(\\s[A-Za-zÀ-ÿ]+)+$",
-                message = "O nome deve conter nome e sobrenome, e não pode ter caracteres especiais"
+                regexp = "^[A-Za-zÀ-ÿ]+(\\s[A-Za-zÀ-ÿ]+)*$",
+                message = "O nome não pode ter caracteres especiais"
         )
         String nomePet,
 
