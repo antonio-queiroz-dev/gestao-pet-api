@@ -22,5 +22,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: testa testes unitarios
-        run: mvn clean test
+      - name: roda testes automatizados
+        run: mvn verify
+
+      - name: publicar relatorio JaCoCo
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
