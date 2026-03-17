@@ -1,7 +1,7 @@
 package com.pawsmanager.api.pet;
 
 import com.pawsmanager.api.exceptions.ResourceNotFoundException;
-import com.example.gestaoPetApi.pet.*;
+import com.pawsmanager.api.pet.*;
 import com.pawsmanager.api.tutor.TutorRepository;
 import com.pawsmanager.api.tutor.AddressTutor;
 import com.pawsmanager.api.tutor.Tutor;

@@ -85,7 +85,7 @@ public class PetService {
 
     @Cacheable(value = "petsList", key = "'sexo:' + #sexo")
     public List<PetResponseDto> buscarPorSexo(String sexo) {
-        List<Pet> listaRetorno = petRepository.findByPetSexo(PetGender.valueOf(sexo.toUpperCase()));
+        List<Pet> listaRetorno = petRepository.findByPetGender(PetGender.valueOf(sexo.toUpperCase()));
         return listaRetorno.stream().map(this::toResponseDto).toList();
     }
 
