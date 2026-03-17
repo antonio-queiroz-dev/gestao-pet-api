@@ -7,25 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class TutorIntegrationTest extends BaseIntegrationTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private TutorRepository tutorRepository;
 
     private static final String BASE_URL = "/api/tutores";
-
 
     @BeforeEach
     void setUp() {
@@ -34,7 +25,6 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
 
     private Tutor criarEsalvarTutor(String nome, String email, String telefone) {
         EnderecoTutor endereco = criarEnderecoPadrao();
-
         Tutor tutor = new Tutor();
         tutor.setNome(nome);
         tutor.setEmail(email);
@@ -53,64 +43,40 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     }
 
     private TutorCreateDto criarTutorCreateDto(String nome, String email, String telefone) {
-        EnderecoTutor endereco = criarEnderecoPadrao();
-
-        return new TutorCreateDto(
-                nome,
-                email,
-                telefone,
-                endereco
-        );
+        return new TutorCreateDto(nome, email, telefone, criarEnderecoPadrao());
     }
 
     private TutorUpdateDto criarTutorUpdateDto(String nome, String email, String telefone) {
-        EnderecoTutor endereco = criarEnderecoPadrao();
-        return new TutorUpdateDto(
-                nome,
-                email,
-                telefone,
-                endereco
-        );
+        return new TutorUpdateDto(nome, email, telefone, criarEnderecoPadrao());
     }
 
     @Test
     @DisplayName("Deve criar um tutor com sucesso")
     void deveCriarTutorComSucesso() {
+        TutorCreateDto request = criarTutorCreateDto("João Silva", "joao@email.com", "11999999999");
 
-        TutorCreateDto request = criarTutorCreateDto(
-                "João Silva",
-                "joao@email.com",
-                "11999999999"
-        );
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
-                "/api/tutores",
-                request,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(request, headersComToken()),
                 TutorResponseDto.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().nome()).isEqualTo(("João Silva"));
+        assertThat(response.getBody().nome()).isEqualTo("João Silva");
         assertThat(tutorRepository.count()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("Criar Tutor com nome inválido")
     void deveCriarTutorComNomeInvalido() {
+        TutorCreateDto request = new TutorCreateDto("", "joao@mail.com", "11999999999", criarEnderecoPadrao());
 
-        EnderecoTutor endereco = criarEnderecoPadrao();
-
-        TutorCreateDto request = new TutorCreateDto(
-                "",
-                "joao@mail.com",
-                "11999999999",
-                endereco
-        );
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
-                "/api/tutores",
-                request,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(request, headersComToken()),
                 TutorResponseDto.class
         );
 
@@ -121,20 +87,15 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Tutor com email inválido")
     void deveCriarTutorComEmailInvalido() {
+        TutorCreateDto request = new TutorCreateDto("João Silva", "joao", "11999999999", criarEnderecoPadrao());
 
-        EnderecoTutor endereco = criarEnderecoPadrao();
-
-        TutorCreateDto request = new TutorCreateDto(
-                "João Silva",
-                "joao",
-                "11999999999",
-                endereco);
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
-                "/api/tutores",
-                request,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(request, headersComToken()),
                 TutorResponseDto.class
         );
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(tutorRepository.count()).isEqualTo(0);
     }
@@ -142,53 +103,47 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Criar Tutor com telefone inválido")
     void deveCriarTutorComTelefoneInvalido() {
+        TutorCreateDto request = criarTutorCreateDto("João Silva", "joao@mail.com", "");
 
-        EnderecoTutor endereco = criarEnderecoPadrao();
-
-        TutorCreateDto request = criarTutorCreateDto(
-                "João Silva",
-                "joao@mail.com",
-                "");
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.postForEntity(
-                "/api/tutores",
-                request,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(request, headersComToken()),
                 TutorResponseDto.class
         );
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(tutorRepository.count()).isEqualTo(0);
-
     }
 
     @Test
     @DisplayName("Deve buscar um tutor por ID existente")
     void deveBuscarTutorPorIdExistente() {
+        Tutor tutorSalvo = criarEsalvarTutor("João Silva", "joao@email.com", "11999999999");
 
-        Tutor tutorSalvo = criarEsalvarTutor(
-                "João Silva",
-                "joao@email.com",
-                "11999999999");
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.getForEntity(
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
                 BASE_URL + "/" + tutorSalvo.getId(),
+                HttpMethod.GET,
+                new HttpEntity<>(headersComToken()),
                 TutorResponseDto.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().nome()).isEqualTo(("João Silva"));
+        assertThat(response.getBody().nome()).isEqualTo("João Silva");
     }
 
     @Test
     @DisplayName("Deve retornar 404 ao buscar tutor inexistente")
     void deveRetornar404AoBuscarTutorInexistente() {
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.getForEntity(
-                "/api/tutores/" + 999,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL + "/999",
+                HttpMethod.GET,
+                new HttpEntity<>(headersComToken()),
                 TutorResponseDto.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo((HttpStatus.NOT_FOUND));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -198,8 +153,10 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
         criarEsalvarTutor("Pedro Alvares", "pedro@mail.com", "65999999999");
         criarEsalvarTutor("José Bonifácio", "jose@mail.com", "21999999999");
 
-        ResponseEntity<TutorResponseDto[]> response = restTemplate.getForEntity(
+        ResponseEntity<TutorResponseDto[]> response = testRestTemplate.exchange(
                 BASE_URL,
+                HttpMethod.GET,
+                new HttpEntity<>(headersComToken()),
                 TutorResponseDto[].class
         );
 
@@ -212,10 +169,12 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Deve retonar lista vazia quando não há tutores cadastrados")
+    @DisplayName("Deve retornar lista vazia quando não há tutores cadastrados")
     void deveRetornarListaVazia() {
-        ResponseEntity<TutorResponseDto[]> response = restTemplate.getForEntity(
+        ResponseEntity<TutorResponseDto[]> response = testRestTemplate.exchange(
                 BASE_URL,
+                HttpMethod.GET,
+                new HttpEntity<>(headersComToken()),
                 TutorResponseDto[].class
         );
 
@@ -224,29 +183,16 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getBody()).isEmpty();
     }
 
-
     @Test
     @DisplayName("Atualizar um tutor existente")
     void deveAtualizarTutorExistente() {
+        Tutor tutorSalvo = criarEsalvarTutor("João Silva", "joao@mail.com", "11999999999");
+        TutorUpdateDto dadosAtualizados = criarTutorUpdateDto("João Atualizado", "emailAtualizado@mail.com", "1234567891");
 
-        Tutor tutorSalvo = criarEsalvarTutor(
-                "João Silva",
-                "joao@mail.com",
-                "11999999999"
-        );
-
-        TutorUpdateDto dadosAtualizados = criarTutorUpdateDto(
-                "João Atualizado",
-                "emailAtualizado@mail.com",
-                "1234567891"
-        );
-
-        HttpEntity<TutorUpdateDto> requestEntity = new HttpEntity<>(dadosAtualizados);
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.exchange(
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
                 BASE_URL + "/" + tutorSalvo.getId(),
                 HttpMethod.PUT,
-                requestEntity,
+                new HttpEntity<>(dadosAtualizados, headersComToken()),
                 TutorResponseDto.class
         );
 
@@ -260,18 +206,12 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Atualizar Tutor inexistente")
     void deveAtualizarTutorInexistente() {
+        TutorUpdateDto dadosAtualizado = criarTutorUpdateDto("João Atualizado", "emailAtualizado@mail.com", "1234567891");
 
-        TutorUpdateDto dadosAtualizado = criarTutorUpdateDto(
-                "João Atualizado",
-                "emailAtualizado@mail.com",
-                "1234567891");
-
-        HttpEntity<TutorUpdateDto> requestEntity = new HttpEntity<>(dadosAtualizado);
-
-        ResponseEntity<TutorResponseDto> response = restTemplate.exchange(
-                BASE_URL + "/" + 999,
+        ResponseEntity<TutorResponseDto> response = testRestTemplate.exchange(
+                BASE_URL + "/999",
                 HttpMethod.PUT,
-                requestEntity,
+                new HttpEntity<>(dadosAtualizado, headersComToken()),
                 TutorResponseDto.class
         );
 
@@ -281,16 +221,13 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Deletar um tutor existente")
     void deveDeletarTutorExistente() {
-        Tutor tutorSalvo = criarEsalvarTutor(
-                "João Silva",
-                "joao@email.com",
-                "11999999999");
+        Tutor tutorSalvo = criarEsalvarTutor("João Silva", "joao@email.com", "11999999999");
 
-        ResponseEntity<TutorResponseDto> response = restTemplate.exchange(
+        ResponseEntity<Void> response = testRestTemplate.exchange(
                 BASE_URL + "/" + tutorSalvo.getId(),
                 HttpMethod.DELETE,
-                null,
-                TutorResponseDto.class
+                new HttpEntity<>(headersComToken()),
+                Void.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -299,17 +236,15 @@ public class TutorIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Deletar Tutor inexistente ")
+    @DisplayName("Deletar Tutor inexistente")
     void deveDeletarTutorInexistente() {
-        ResponseEntity<TutorResponseDto> response = restTemplate.exchange(
-                BASE_URL + "/" + 999,
+        ResponseEntity<Void> response = testRestTemplate.exchange(
+                BASE_URL + "/999",
                 HttpMethod.DELETE,
-                null,
-                TutorResponseDto.class
+                new HttpEntity<>(headersComToken()),
+                Void.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
-
-
 }
