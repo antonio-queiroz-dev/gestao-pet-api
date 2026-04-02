@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(title = "Paws Manager",
                 version = "1.0",
-                description = "API REST desenvolvida com Spring Boot 3, Java 21 e MySQL",
-                contact = @Contact(
-                        name = "Antonio Queiroz",
-                        url = "https://www.linkedin.com/in/antonio-queiroz-dev")),
+                description = "API REST desenvolvida com Spring Boot 3, Java 21 e MySQL\n\n" +
+                        "[GitHub](https://github.com/antonio-queiroz-dev/paws-manager) | " +
+                        "[LinkedIn](https://linkedin.com/in/antonio-queiroz-dev)",
+                contact = @Contact(name = "Antonio Queiroz", email = "juniorqueirozaa@gmail.com")),
         security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
